@@ -9,6 +9,7 @@ import type {
   UserProgress,
   LossEvent,
   Redemption,
+  Order,
 } from "@/types";
 
 const KEYS = {
@@ -18,6 +19,7 @@ const KEYS = {
   lossEvents: "meshikatsu:lossEvents",
   redemptions: "meshikatsu:redemptions",
   zeroLossWeeks: "meshikatsu:zeroLossWeeks", // 付与済みの「ロスゼロ週間」数
+  orders: "meshikatsu:orders",
 } as const;
 
 const isBrowser = () => typeof window !== "undefined";
@@ -111,6 +113,16 @@ export function getRedemptions(): Redemption[] {
 export function addRedemption(r: Redemption): Redemption[] {
   const next = [r, ...getRedemptions()];
   write(KEYS.redemptions, next);
+  return next;
+}
+
+// ---- 注文履歴（Order[]・補充） ----
+export function getOrders(): Order[] {
+  return read<Order[]>(KEYS.orders, []);
+}
+export function addOrder(order: Order): Order[] {
+  const next = [order, ...getOrders()];
+  write(KEYS.orders, next);
   return next;
 }
 

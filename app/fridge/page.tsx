@@ -3,6 +3,7 @@
 // 担当: エンジニアB（冷蔵庫管理 /fridge）
 // 食材の在庫一覧（期限が近い順・色分け）と手動の追加・削除。
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import {
   getFridge,
   addFoodItem,
@@ -251,6 +252,9 @@ export default function FridgePage() {
           <p className="mt-1 text-xs text-ink-soft/70">
             「＋追加」かレシート読取で食材を入れよう
           </p>
+          <Link href="/shop" className="btn-ghost mt-4 inline-flex">
+            🛒 390円で補充する
+          </Link>
         </div>
       ) : (
         <ul className="mt-4 space-y-2.5">

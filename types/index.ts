@@ -89,3 +89,28 @@ export interface ReceiptItem {
 
 /** 消費期限の緊急度（色分け用） */
 export type ExpiryStatus = "urgent" | "warn" | "safe" | "expired";
+
+/** 補充ショップの商品（折衷案: HTML版の¥390商品をツールに統合） */
+export interface ShopProduct {
+  id: string;
+  name: string;
+  price: number; // 円（基本 ¥390）
+  emoji: string;
+  category: FoodCategory;
+  expiryDays: number; // 購入後の標準消費期限（日数）
+  tag?: string; // "冷凍" など
+}
+
+/** 注文（補充。デモ＝実決済なし） */
+export interface OrderLine {
+  productId: string;
+  name: string;
+  price: number;
+  qty: number;
+}
+export interface Order {
+  id: string;
+  lines: OrderLine[];
+  total: number;
+  at: string; // ISO 8601 形式
+}

@@ -138,6 +138,29 @@ export default function HomePage() {
         </section>
       )}
 
+      {/* 補充の提案（折衷案）: 在庫が少ない or 期限が近いとき */}
+      {(fridgeCount < 5 || alerts.length > 0) && (
+        <section className="mt-6">
+          <Link
+            href="/shop"
+            className="flex items-center gap-3 rounded-3xl border border-accent/20 bg-accent-light/50 p-4 transition-transform active:scale-[0.98]"
+          >
+            <span className="text-3xl" aria-hidden>
+              🛒
+            </span>
+            <span className="min-w-0 flex-1">
+              <span className="block text-sm font-black text-ink">
+                在庫が少なくなっています
+              </span>
+              <span className="block text-xs text-ink-soft">
+                足りない食材を390円から補充できます
+              </span>
+            </span>
+            <span className="shrink-0 text-sm font-black text-accent">補充 →</span>
+          </Link>
+        </section>
+      )}
+
       {/* クイックアクション */}
       <section className="mt-6">
         <h2 className="section-title">クイックアクション</h2>
