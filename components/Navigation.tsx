@@ -4,8 +4,9 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const TABS = [
-  { href: "/",          label: "フィード",  icon: "🏠" },
+  { href: "/",          label: "ホーム",    icon: "🏠" },
   { href: "/fridge",    label: "冷蔵庫",    icon: "🧊" },
+  { href: "/shop",      label: "ショップ",  icon: "🛒" },
   { href: "/cook",      label: "投稿",      icon: "✚",  post: true },
   { href: "/recipe",    label: "レシピ",    icon: "📖" },
   { href: "/character", label: "キャラ",    icon: "⭐" },
@@ -81,7 +82,7 @@ export default function Navigation() {
                     className="flex flex-col items-center gap-0.5 transition-all"
                   >
                     <span
-                      className="flex h-8 w-9 items-center justify-center rounded-xl text-[19px] transition-all duration-200"
+                      className="flex h-7 w-8 items-center justify-center rounded-xl text-[17px] transition-all duration-200"
                       style={
                         active
                           ? {
