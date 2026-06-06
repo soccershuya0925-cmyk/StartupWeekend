@@ -70,6 +70,32 @@ export interface CharacterStage {
   name: string;
 }
 
+// ============================================================
+// ¥390 補充ショップ
+// ============================================================
+
+export type ProductCategory = "frozen-meal" | "pasta" | "side" | "bread" | "other";
+
+export interface Product {
+  id: string;
+  name: string;
+  price: number;
+  emoji: string;
+  category: ProductCategory;
+  description: string;
+  tags: string[];
+  daysToKeep: number;
+}
+
+export interface PlannedMeal {
+  id: string;
+  productName: string;
+  emoji: string;
+  eatDate: string;
+  done: boolean;
+  orderedAt: string;
+}
+
 export interface ReceiptItem {
   name: string;
   quantity: number;

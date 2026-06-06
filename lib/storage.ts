@@ -11,6 +11,7 @@ import type {
   Redemption,
   MyRecipe,
   PostComment,
+  PlannedMeal,
 } from "@/types";
 
 const KEYS = {
@@ -25,7 +26,9 @@ const KEYS = {
   postLikes: "meshikatsu:postLikes",
   postComments: "meshikatsu:postComments",
   postStars: "meshikatsu:postStars",
-  profile: "meshikatsu:profile",           // UserProfile — 名前・アバター・ひとこと
+  profile: "meshikatsu:profile",
+  plans: "meshikatsu:plans",               // PlannedMeal[] — 食べる予定
+  ecoActions: "meshikatsu:ecoActions",     // string[] — ロス削減アクションの日付ログ
 } as const;
 
 const isBrowser = () => typeof window !== "undefined";
@@ -203,6 +206,24 @@ export function getProfile(): UserProfile {
 
 export function saveProfile(p: UserProfile): void {
   write(KEYS.profile, p);
+}
+
+// ---- 食べる予定（PlannedMeal[]） ----
+export function getPlans(): PlannedMeal[] {
+  return read<PlannedMeal[]>(KEYS.plans, []);
+}
+export function addPlan(plan: PlannedMeal): PlannedMeal[] {
+  const next = [...getPlans(), plan];
+  write(KEYS.plans, next);
+  return next;
+}
+
+// ---- ロス削減アクション日付ログ（string[]） ----
+export function getEcoActions(): string[] {
+  return read<string[]>(KEYS.ecoActions, []);
+}
+export function recordEcoAction(dateISO: string): void {
+  write(KEYS.ecoActions, [...getEcoActions(), dateISO]);
 }
 
 /** デモ用：全データをリセット */
