@@ -1,7 +1,16 @@
 import type { Metadata, Viewport } from "next";
+import { M_PLUS_Rounded_1c } from "next/font/google";
 import "./globals.css";
 import Navigation from "@/components/Navigation";
 import Onboarding from "@/components/Onboarding";
+
+const mplus = M_PLUS_Rounded_1c({
+  weight: ["400", "500", "700", "800", "900"],
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-mplus",
+  preload: false,
+});
 
 export const metadata: Metadata = {
   title: "メシ活 — 食品ロスゼロアプリ",
@@ -24,20 +33,19 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="ja">
-      <body className="bg-cream">
-        {/* デスクトップでは中央のスマホ幅カラム。背景は温かいグラデーション */}
-        <div className="app-shell relative mx-auto min-h-screen max-w-md bg-gradient-to-b from-accent-light/40 via-cream to-cream shadow-xl shadow-ink/5">
+    <html lang="ja" className={mplus.variable}>
+      <body className="bg-[#f0f2f5]">
+        {/* デスクトップ：中央カラム＋温かいグラデーション背景 */}
+        <div className="app-shell relative mx-auto min-h-screen max-w-md overflow-hidden shadow-float"
+          style={{
+            background: "linear-gradient(160deg, #FFE3C2 0%, #FFF8EF 40%, #EFF9F2 100%)",
+          }}
+        >
           {children}
         </div>
         <Navigation />
-        {/* 初回起動時のチュートリアル（localStorage フラグで一度だけ） */}
         <Onboarding />
       </body>
     </html>
