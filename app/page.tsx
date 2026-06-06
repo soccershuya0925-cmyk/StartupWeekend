@@ -6,13 +6,21 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { getProgress, getFridge } from "@/lib/storage";
+import {
+  getProgress,
+  saveProgress,
+  getFridge,
+  getPlans,
+  updatePlan,
+} from "@/lib/storage";
 import { sortByExpiry, statusLabel, statusClasses, expiryStatus } from "@/lib/expiry";
 import { suggestRecipes, seasonFromMonth, type RecipeSuggestion } from "@/lib/recommend";
+import { recommendProducts, type ProductSuggestion } from "@/lib/products";
+import { applyXP, XP_REWARDS } from "@/lib/xp";
 import { seedDemo, clearDemo } from "@/lib/seed";
 import CharacterDisplay from "@/components/CharacterDisplay";
 import XPBar from "@/components/XPBar";
-import type { FoodItem, UserProgress } from "@/types";
+import type { FoodItem, UserProgress, PlannedMeal } from "@/types";
 
 // storage の DEFAULT_PROGRESS 相当（SSR と初期描画の整合用）
 const DEFAULT_PROGRESS: UserProgress = {
@@ -26,6 +34,8 @@ export default function HomePage() {
   const [progress, setProgress] = useState<UserProgress>(DEFAULT_PROGRESS);
   const [alerts, setAlerts] = useState<FoodItem[]>([]);
   const [recipes, setRecipes] = useState<RecipeSuggestion[]>([]);
+  const [shopPicks, setShopPicks] = useState<ProductSuggestion[]>([]);
+  const [plans, setPlans] = useState<PlannedMeal[]>([]);
 
   // localStorage 読み出しは useEffect 内（ハイドレーション不整合を避ける）
   useEffect(() => {
@@ -35,7 +45,27 @@ export default function HomePage() {
     // 旬（現在の月）× 手持ち食材 でおすすめレシピを算出
     const season = seasonFromMonth(new Date().getMonth() + 1);
     setRecipes(suggestRecipes(fridge, season, 3));
+    // 折衷C: 冷蔵庫の状態に連動した ¥390 おすすめ
+    setShopPicks(recommendProducts(fridge, 2));
+    loadPlans();
   }, []);
+
+  function loadPlans() {
+    // 未完了の予定を、食べる日が近い順に
+    const upcoming = getPlans()
+      .filter((p) => !p.done)
+      .sort((a, b) => a.eatDate.localeCompare(b.eatDate));
+    setPlans(upcoming);
+  }
+
+  // 予定どおり食べた → 食習慣ボーナス XP
+  function handleAte(plan: PlannedMeal) {
+    updatePlan(plan.id, { done: true });
+    const next = applyXP(getProgress(), XP_REWARDS.ateAsPlanned);
+    saveProgress(next);
+    setProgress(next);
+    loadPlans();
+  }
 
   return (
     <main className="px-4 py-6">
@@ -84,6 +114,76 @@ export default function HomePage() {
           </ul>
         )}
       </section>
+
+      {/* 食べる予定（折衷C: いつ・どれだけ食べるか）*/}
+      {plans.length > 0 && (
+        <section className="mt-6">
+          <h2 className="text-sm font-semibold text-slate-800">📅 食べる予定</h2>
+          <ul className="mt-2 space-y-2">
+            {plans.map((p) => (
+              <li
+                key={p.id}
+                className="flex items-center gap-3 rounded-lg border border-slate-200 bg-white p-3"
+              >
+                <span className="text-2xl" aria-hidden>
+                  {p.emoji}
+                </span>
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-sm font-semibold text-slate-800">
+                    {p.productName}
+                  </p>
+                  <p className="text-xs text-slate-500">{p.eatDate} に食べる予定</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => handleAte(p)}
+                  className="shrink-0 rounded-lg bg-brand px-3 py-1.5 text-xs font-semibold text-white hover:bg-brand-dark"
+                >
+                  食べた +{XP_REWARDS.ateAsPlanned}
+                </button>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      {/* あと一品どう？（折衷C: ¥390 販売導線・冷蔵庫の状態に連動）*/}
+      {shopPicks.length > 0 && (
+        <section className="mt-6">
+          <div className="flex items-center justify-between">
+            <h2 className="text-sm font-semibold text-slate-800">
+              🍱 あと一品どう？（¥390）
+            </h2>
+            <Link href="/shop" className="text-xs font-semibold text-brand">
+              ショップへ →
+            </Link>
+          </div>
+          <ul className="mt-2 space-y-2">
+            {shopPicks.map((p) => (
+              <li
+                key={p.id}
+                className="flex items-center gap-3 rounded-lg border border-brand/30 bg-brand/5 p-3"
+              >
+                <span className="text-2xl" aria-hidden>
+                  {p.emoji}
+                </span>
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-sm font-semibold text-slate-800">
+                    {p.name}
+                  </p>
+                  <p className="truncate text-xs text-brand">{p.reason}</p>
+                </div>
+                <Link
+                  href="/shop"
+                  className="shrink-0 rounded-lg bg-brand px-3 py-1.5 text-xs font-semibold text-white hover:bg-brand-dark"
+                >
+                  ¥{p.price}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
 
       {/* 旬の料理提案（機能③）: 冷蔵庫の食材 × 季節 */}
       {recipes.length > 0 && (

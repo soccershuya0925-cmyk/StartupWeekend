@@ -3,11 +3,12 @@
 // 期限は実行日基準で相対計算するので、いつ実行しても自然なデモになる。
 // ============================================================
 
-import type { FoodItem, CookingLog } from "@/types";
+import type { FoodItem, CookingLog, PlannedMeal } from "@/types";
 import {
   saveFridge,
   saveLogs,
   saveProgress,
+  savePlans,
   genId,
   resetAll,
 } from "@/lib/storage";
@@ -34,6 +35,29 @@ function demoFridge(): FoodItem[] {
     { name: "玉ねぎ", quantity: 3, unit: "個", expiryDate: dateAfter(12), category: "vegetable" },
   ];
   return base.map((b) => ({ ...b, id: genId(), addedAt: now }));
+}
+
+/** デモ用の「食べる予定」サンプル（折衷C: ¥390注文済み） */
+function demoPlans(): PlannedMeal[] {
+  const now = new Date().toISOString();
+  return [
+    {
+      id: genId(),
+      productName: "冷凍ごろごろ野菜カレー",
+      emoji: "🍛",
+      eatDate: dateAfter(1),
+      done: false,
+      orderedAt: now,
+    },
+    {
+      id: genId(),
+      productName: "具だくさん野菜スープ",
+      emoji: "🥣",
+      eatDate: dateAfter(3),
+      done: false,
+      orderedAt: now,
+    },
+  ];
 }
 
 /** デモ用の料理記録サンプル */
@@ -63,6 +87,9 @@ export function seedDemo(): void {
 
   const logs = demoLogs();
   saveLogs(logs);
+
+  // 折衷C: ¥390 注文済みの「食べる予定」も投入
+  savePlans(demoPlans());
 
   // 料理6回ぶんの XP（= スタンプ1個 + α）でキャラを育てておく
   let progress = applyXP(
