@@ -6,9 +6,12 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { getLossEvents } from "@/lib/storage";
+import { getLossEvents, getProgress } from "@/lib/storage";
 import { computeLossStats, type LossStats } from "@/lib/loss";
+import { stageFromLevel } from "@/lib/xp";
+import ShareCard from "@/components/ShareCard";
 import type { LossEvent } from "@/types";
+import type { ShareData } from "@/lib/share";
 
 const EMPTY: LossStats = {
   savedCount: 0,
@@ -24,11 +27,23 @@ const EMPTY: LossStats = {
 export default function StatsPage() {
   const [stats, setStats] = useState<LossStats>(EMPTY);
   const [events, setEvents] = useState<LossEvent[]>([]);
+  const [share, setShare] = useState<ShareData | null>(null);
 
   useEffect(() => {
     const ev = getLossEvents();
+    const st = computeLossStats(ev);
+    const progress = getProgress();
+    const stage = stageFromLevel(progress.level);
     setEvents(ev);
-    setStats(computeLossStats(ev));
+    setStats(st);
+    setShare({
+      level: progress.level,
+      stageName: stage.name,
+      emoji: stage.emoji,
+      savedCount: st.savedCount,
+      savedYen: st.savedYen,
+      streakDays: st.streakDays,
+    });
   }, []);
 
   const lossPct = Math.round(stats.lossRate * 100);
@@ -176,6 +191,12 @@ export default function StatsPage() {
             ))}
           </ul>
         )}
+      </section>
+
+      {/* 実績をSNSにシェア */}
+      <section className="mt-6">
+        <h2 className="section-title">📣 実績をシェア</h2>
+        {share && <ShareCard data={share} />}
       </section>
     </main>
   );
