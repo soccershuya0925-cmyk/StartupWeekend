@@ -3,12 +3,13 @@
 // SSR 中は window が無いので必ずガードする
 // ============================================================
 
-import type { FoodItem, CookingLog, UserProgress } from "@/types";
+import type { FoodItem, CookingLog, UserProgress, PlannedMeal } from "@/types";
 
 const KEYS = {
   fridge: "meshikatsu:fridge",
   logs: "meshikatsu:logs",
   progress: "meshikatsu:progress",
+  plans: "meshikatsu:plans",
 } as const;
 
 const isBrowser = () => typeof window !== "undefined";
@@ -82,6 +83,30 @@ export function getProgress(): UserProgress {
 }
 export function saveProgress(progress: UserProgress): void {
   write(KEYS.progress, progress);
+}
+
+// ---- 食べる予定（PlannedMeal[]・折衷C） ----
+export function getPlans(): PlannedMeal[] {
+  return read<PlannedMeal[]>(KEYS.plans, []);
+}
+export function savePlans(plans: PlannedMeal[]): void {
+  write(KEYS.plans, plans);
+}
+export function addPlan(plan: PlannedMeal): PlannedMeal[] {
+  const next = [...getPlans(), plan];
+  savePlans(next);
+  return next;
+}
+/** 予定の done を更新（予定どおり食べた等） */
+export function updatePlan(id: string, patch: Partial<PlannedMeal>): PlannedMeal[] {
+  const next = getPlans().map((p) => (p.id === id ? { ...p, ...patch } : p));
+  savePlans(next);
+  return next;
+}
+export function removePlan(id: string): PlannedMeal[] {
+  const next = getPlans().filter((p) => p.id !== id);
+  savePlans(next);
+  return next;
 }
 
 /** デモ用：全データをリセット */

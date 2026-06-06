@@ -14,6 +14,8 @@ export const XP_REWARDS = {
   receipt: 10, // レシートを登録する
   useBeforeExpiry: 100, // 消費期限内に食材を使い切る（ボーナス）
   zeroLossWeek: 500, // 食品ロスゼロ週間を達成（特別ボーナス）
+  planMeal: 30, // 折衷C: 食べる予定を立てる（¥390注文）
+  ateAsPlanned: 80, // 折衷C: 予定どおり食べた（食習慣ボーナス）
 } as const;
 
 /** スタンプ：料理 N 回ごとに 1 個 */

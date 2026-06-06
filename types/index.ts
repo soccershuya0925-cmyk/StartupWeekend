@@ -58,3 +58,34 @@ export interface ReceiptItem {
 
 /** 消費期限の緊急度（色分け用） */
 export type ExpiryStatus = "urgent" | "warn" | "safe" | "expired";
+
+// ============================================================
+// 折衷C：¥390 商品販売 ＋ 食べる予定（食習慣管理）
+// ============================================================
+
+/** 販売商品カテゴリ（冷凍中心で日持ち） */
+export type ProductCategory = "frozen-meal" | "pasta" | "bread" | "side";
+
+/** ¥390 で届く商品（自社提供・冷凍中心） */
+export interface Product {
+  id: string;
+  name: string;
+  price: number; // 基本 ¥390
+  emoji: string;
+  category: ProductCategory;
+  description: string;
+  /** この商品が「あと一品」を埋めるシーン・食材タグ */
+  tags: string[];
+  /** 冷凍での日持ち日数 */
+  daysToKeep: number;
+}
+
+/** 食べる予定（A の「いつ・どれだけ食べるか」管理） */
+export interface PlannedMeal {
+  id: string;
+  productName: string;
+  emoji: string;
+  eatDate: string; // ISO 8601 形式 (YYYY-MM-DD)
+  done: boolean; // 予定どおり食べたら true
+  orderedAt: string; // ISO 8601 形式
+}
