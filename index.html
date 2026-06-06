@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<meta name="theme-color" content="#FF7A1A" />
+<title>オレの食品ロスを助けてくれ</title>
+
+<!-- Tailwind: コンパイル済みCSSを焼き込み（CDN不要・完全オフライン対応） -->
+<style id="tw-compiled">
+*,:after,:before{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgba(59,130,246,.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgba(59,130,246,.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/*! tailwindcss v3.4.17 | MIT License | https://tailwindcss.com*/*,:after,:before{box-sizing:border-box;border:0 solid #e5e7eb}:after,:before{--tw-content:""}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;-o-tab-size:4;tab-size:4;font-family:ui-sans-serif,system-ui,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji;font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,Liberation Mono,Courier New,monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0}fieldset,legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::-moz-placeholder,textarea::-moz-placeholder{opacity:1;color:#9ca3af}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.pointer-events-none{pointer-events:none}.absolute{position:absolute}.relative{position:relative}.inset-0{inset:0}.-bottom-8{bottom:-2rem}.-left-6{left:-1.5rem}.-right-2{right:-.5rem}.-right-3{right:-.75rem}.-right-6{right:-1.5rem}.-right-8{right:-2rem}.-top-2{top:-.5rem}.-top-8{top:-2rem}.left-3{left:.75rem}.right-10{right:2.5rem}.right-2{right:.5rem}.right-3{right:.75rem}.top-2{top:.5rem}.top-3{top:.75rem}.top-8{top:2rem}.m-auto{margin:auto}.mx-auto{margin-left:auto;margin-right:auto}.mb-1{margin-bottom:.25rem}.mb-3{margin-bottom:.75rem}.mb-4{margin-bottom:1rem}.mb-5{margin-bottom:1.25rem}.mb-6{margin-bottom:1.5rem}.ml-7{margin-left:1.75rem}.mr-1{margin-right:.25rem}.mr-2{margin-right:.5rem}.mt-0\.5{margin-top:.125rem}.mt-1{margin-top:.25rem}.mt-2{margin-top:.5rem}.mt-3{margin-top:.75rem}.mt-4{margin-top:1rem}.mt-5{margin-top:1.25rem}.mt-6{margin-top:1.5rem}.block{display:block}.flex{display:flex}.inline-flex{display:inline-flex}.grid{display:grid}.hidden{display:none}.h-1\.5{height:.375rem}.h-11{height:2.75rem}.h-12{height:3rem}.h-24{height:6rem}.h-28{height:7rem}.h-32{height:8rem}.h-44{height:11rem}.h-6{height:1.5rem}.h-7{height:1.75rem}.h-\[100svh\]{height:100svh}.min-h-full{min-height:100%}.min-h-screen{min-height:100vh}.w-1\.5{width:.375rem}.w-11{width:2.75rem}.w-12{width:3rem}.w-24{width:6rem}.w-28{width:7rem}.w-32{width:8rem}.w-44{width:11rem}.w-6{width:1.5rem}.w-7{width:1.75rem}.w-full{width:100%}.min-w-0{min-width:0}.max-w-\[430px\]{max-width:430px}.max-w-\[60\%\]{max-width:60%}.flex-1{flex:1 1 0%}.shrink-0{flex-shrink:0}.-translate-y-0\.5{--tw-translate-y:-0.125rem}.-translate-y-0\.5,.rotate-6{transform:translate(var(--tw-translate-x),var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.rotate-6{--tw-rotate:6deg}.transform{transform:translate(var(--tw-translate-x),var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.grid-cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}.grid-cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}.flex-col{flex-direction:column}.flex-wrap{flex-wrap:wrap}.place-items-center{place-items:center}.items-start{align-items:flex-start}.items-end{align-items:flex-end}.items-center{align-items:center}.justify-center{justify-content:center}.justify-between{justify-content:space-between}.gap-1{gap:.25rem}.gap-1\.5{gap:.375rem}.gap-2{gap:.5rem}.gap-2\.5{gap:.625rem}.gap-3{gap:.75rem}.space-y-2>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(.5rem*(1 - var(--tw-space-y-reverse)));margin-bottom:calc(.5rem*var(--tw-space-y-reverse))}.space-y-3>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(.75rem*(1 - var(--tw-space-y-reverse)));margin-bottom:calc(.75rem*var(--tw-space-y-reverse))}.overflow-hidden{overflow:hidden}.overflow-y-auto{overflow-y:auto}.truncate{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.rounded{border-radius:.25rem}.rounded-2xl{border-radius:1rem}.rounded-3xl{border-radius:1.5rem}.rounded-full{border-radius:9999px}.rounded-xl{border-radius:.75rem}.border-2{border-width:2px}.border-b-2{border-bottom-width:2px}.border-t{border-top-width:1px}.border-t-2{border-top-width:2px}.border-dashed{border-style:dashed}.border-brand-green{--tw-border-opacity:1;border-color:rgb(47 191 91/var(--tw-border-opacity,1))}.border-brand-green\/30{border-color:rgba(47,191,91,.3)}.border-brand-green\/40{border-color:rgba(47,191,91,.4)}.border-brand-orange{--tw-border-opacity:1;border-color:rgb(255 122 26/var(--tw-border-opacity,1))}.border-gray-200{--tw-border-opacity:1;border-color:rgb(229 231 235/var(--tw-border-opacity,1))}.border-orange-100{--tw-border-opacity:1;border-color:rgb(255 237 213/var(--tw-border-opacity,1))}.border-red-300{--tw-border-opacity:1;border-color:rgb(252 165 165/var(--tw-border-opacity,1))}.border-transparent{border-color:transparent}.border-white\/15{border-color:hsla(0,0%,100%,.15)}.bg-black\/35{background-color:rgba(0,0,0,.35)}.bg-brand-green{--tw-bg-opacity:1;background-color:rgb(47 191 91/var(--tw-bg-opacity,1))}.bg-brand-green\/10{background-color:rgba(47,191,91,.1)}.bg-brand-green\/40{background-color:rgba(47,191,91,.4)}.bg-brand-leaf{--tw-bg-opacity:1;background-color:rgb(31 157 85/var(--tw-bg-opacity,1))}.bg-brand-orange{--tw-bg-opacity:1;background-color:rgb(255 122 26/var(--tw-bg-opacity,1))}.bg-brand-orange\/20{background-color:rgba(255,122,26,.2)}.bg-cream{--tw-bg-opacity:1;background-color:rgb(255 248 239/var(--tw-bg-opacity,1))}.bg-green-50{--tw-bg-opacity:1;background-color:rgb(240 253 244/var(--tw-bg-opacity,1))}.bg-ink{--tw-bg-opacity:1;background-color:rgb(58 42 27/var(--tw-bg-opacity,1))}.bg-orange-100{--tw-bg-opacity:1;background-color:rgb(255 237 213/var(--tw-bg-opacity,1))}.bg-orange-50{--tw-bg-opacity:1;background-color:rgb(255 247 237/var(--tw-bg-opacity,1))}.bg-white{--tw-bg-opacity:1;background-color:rgb(255 255 255/var(--tw-bg-opacity,1))}.bg-white\/10{background-color:hsla(0,0%,100%,.1)}.bg-white\/25{background-color:hsla(0,0%,100%,.25)}.bg-white\/90{background-color:hsla(0,0%,100%,.9)}.bg-gradient-to-b{background-image:linear-gradient(to bottom,var(--tw-gradient-stops))}.bg-gradient-to-br{background-image:linear-gradient(to bottom right,var(--tw-gradient-stops))}.bg-gradient-to-r{background-image:linear-gradient(to right,var(--tw-gradient-stops))}.from-\[\#FFE3C2\]{--tw-gradient-from:#ffe3c2 var(--tw-gradient-from-position);--tw-gradient-to:rgba(255,227,194,0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from),var(--tw-gradient-to)}.from-brand-deep{--tw-gradient-from:#ff6300 var(--tw-gradient-from-position);--tw-gradient-to:rgba(255,99,0,0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from),var(--tw-gradient-to)}.from-brand-green{--tw-gradient-from:#2fbf5b var(--tw-gradient-from-position);--tw-gradient-to:rgba(47,191,91,0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from),var(--tw-gradient-to)}.from-brand-orange{--tw-gradient-from:#ff7a1a var(--tw-gradient-from-position);--tw-gradient-to:rgba(255,122,26,0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from),var(--tw-gradient-to)}.via-\[\#FFEFD9\]{--tw-gradient-to:rgba(255,239,217,0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from),#ffefd9 var(--tw-gradient-via-position),var(--tw-gradient-to)}.to-\[\#E9F8EC\]{--tw-gradient-to:#e9f8ec var(--tw-gradient-to-position)}.to-brand-deep{--tw-gradient-to:#ff6300 var(--tw-gradient-to-position)}.to-brand-leaf{--tw-gradient-to:#1f9d55 var(--tw-gradient-to-position)}.to-brand-orange{--tw-gradient-to:#ff7a1a var(--tw-gradient-to-position)}.p-0{padding:0}.p-3{padding:.75rem}.p-4{padding:1rem}.p-5{padding:1.25rem}.p-6{padding:1.5rem}.px-2{padding-left:.5rem;padding-right:.5rem}.px-2\.5{padding-left:.625rem;padding-right:.625rem}.px-3{padding-left:.75rem;padding-right:.75rem}.px-5{padding-left:1.25rem;padding-right:1.25rem}.px-6{padding-left:1.5rem;padding-right:1.5rem}.py-0\.5{padding-top:.125rem;padding-bottom:.125rem}.py-1{padding-top:.25rem;padding-bottom:.25rem}.py-1\.5{padding-top:.375rem;padding-bottom:.375rem}.py-2{padding-top:.5rem;padding-bottom:.5rem}.py-3{padding-top:.75rem;padding-bottom:.75rem}.py-3\.5{padding-top:.875rem;padding-bottom:.875rem}.py-4{padding-top:1rem;padding-bottom:1rem}.py-5{padding-top:1.25rem;padding-bottom:1.25rem}.py-6{padding-top:1.5rem;padding-bottom:1.5rem}.py-8{padding-top:2rem;padding-bottom:2rem}.pb-3{padding-bottom:.75rem}.pb-4{padding-bottom:1rem}.pt-3{padding-top:.75rem}.pt-4{padding-top:1rem}.pt-5{padding-top:1.25rem}.text-left{text-align:left}.text-center{text-align:center}.text-right{text-align:right}.align-middle{vertical-align:middle}.font-mono{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,Liberation Mono,Courier New,monospace}.text-2xl{font-size:1.5rem;line-height:2rem}.text-3xl{font-size:1.875rem;line-height:2.25rem}.text-4xl{font-size:2.25rem;line-height:2.5rem}.text-\[10px\]{font-size:10px}.text-\[11px\]{font-size:11px}.text-\[12px\]{font-size:12px}.text-\[13px\]{font-size:13px}.text-\[14px\]{font-size:14px}.text-\[15px\]{font-size:15px}.text-\[16px\]{font-size:16px}.text-\[18px\]{font-size:18px}.text-\[19px\]{font-size:19px}.text-\[22px\]{font-size:22px}.text-\[24px\]{font-size:24px}.text-\[26px\]{font-size:26px}.text-\[28px\]{font-size:28px}.text-\[30px\]{font-size:30px}.text-\[44px\]{font-size:44px}.text-\[72px\]{font-size:72px}.text-\[88px\]{font-size:88px}.text-base{font-size:1rem;line-height:1.5rem}.text-lg{font-size:1.125rem;line-height:1.75rem}.text-sm{font-size:.875rem;line-height:1.25rem}.text-xl{font-size:1.25rem;line-height:1.75rem}.text-xs{font-size:.75rem;line-height:1rem}.font-black{font-weight:900}.font-bold{font-weight:700}.font-medium{font-weight:500}.leading-none{line-height:1}.leading-relaxed{line-height:1.625}.leading-snug{line-height:1.375}.leading-tight{line-height:1.25}.tracking-\[0\.3em\]{letter-spacing:.3em}.tracking-tight{letter-spacing:-.025em}.tracking-wider{letter-spacing:.05em}.tracking-widest{letter-spacing:.1em}.text-amber-500{--tw-text-opacity:1;color:rgb(245 158 11/var(--tw-text-opacity,1))}.text-brand-deep{--tw-text-opacity:1;color:rgb(255 99 0/var(--tw-text-opacity,1))}.text-brand-leaf{--tw-text-opacity:1;color:rgb(31 157 85/var(--tw-text-opacity,1))}.text-brand-orange{--tw-text-opacity:1;color:rgb(255 122 26/var(--tw-text-opacity,1))}.text-ink{--tw-text-opacity:1;color:rgb(58 42 27/var(--tw-text-opacity,1))}.text-ink\/40{color:rgba(58,42,27,.4)}.text-ink\/45{color:rgba(58,42,27,.45)}.text-ink\/50{color:rgba(58,42,27,.5)}.text-ink\/55{color:rgba(58,42,27,.55)}.text-ink\/60{color:rgba(58,42,27,.6)}.text-ink\/70{color:rgba(58,42,27,.7)}.text-white{--tw-text-opacity:1;color:rgb(255 255 255/var(--tw-text-opacity,1))}.text-white\/70{color:hsla(0,0%,100%,.7)}.text-white\/80{color:hsla(0,0%,100%,.8)}.line-through{text-decoration-line:line-through}.opacity-80{opacity:.8}.opacity-90{opacity:.9}.shadow{--tw-shadow:0 1px 3px 0 rgba(0,0,0,.1),0 1px 2px -1px rgba(0,0,0,.1);--tw-shadow-colored:0 1px 3px 0 var(--tw-shadow-color),0 1px 2px -1px var(--tw-shadow-color)}.shadow,.shadow-2xl{box-shadow:var(--tw-ring-offset-shadow,0 0 #0000),var(--tw-ring-shadow,0 0 #0000),var(--tw-shadow)}.shadow-2xl{--tw-shadow:0 25px 50px -12px rgba(0,0,0,.25);--tw-shadow-colored:0 25px 50px -12px var(--tw-shadow-color)}.shadow-\[0_14px_30px_-12px_rgba\(47\2c 191\2c 91\2c 0\.6\)\]{--tw-shadow:0 14px 30px -12px rgba(47,191,91,.6);--tw-shadow-colored:0 14px 30px -12px var(--tw-shadow-color)}.shadow-\[0_14px_30px_-12px_rgba\(47\2c 191\2c 91\2c 0\.6\)\],.shadow-card{box-shadow:var(--tw-ring-offset-shadow,0 0 #0000),var(--tw-ring-shadow,0 0 #0000),var(--tw-shadow)}.shadow-card{--tw-shadow:0 14px 30px -12px rgba(255,122,26,.35);--tw-shadow-colored:0 14px 30px -12px var(--tw-shadow-color)}.shadow-inner{--tw-shadow:inset 0 2px 4px 0 rgba(0,0,0,.05);--tw-shadow-colored:inset 0 2px 4px 0 var(--tw-shadow-color)}.shadow-inner,.shadow-md{box-shadow:var(--tw-ring-offset-shadow,0 0 #0000),var(--tw-ring-shadow,0 0 #0000),var(--tw-shadow)}.shadow-md{--tw-shadow:0 4px 6px -1px rgba(0,0,0,.1),0 2px 4px -2px rgba(0,0,0,.1);--tw-shadow-colored:0 4px 6px -1px var(--tw-shadow-color),0 2px 4px -2px var(--tw-shadow-color)}.shadow-pop{--tw-shadow:0 10px 0 rgba(0,0,0,.06);--tw-shadow-colored:0 10px 0 var(--tw-shadow-color)}.shadow-pop,.shadow-sm{box-shadow:var(--tw-ring-offset-shadow,0 0 #0000),var(--tw-ring-shadow,0 0 #0000),var(--tw-shadow)}.shadow-sm{--tw-shadow:0 1px 2px 0 rgba(0,0,0,.05);--tw-shadow-colored:0 1px 2px 0 var(--tw-shadow-color)}.ring{--tw-ring-offset-shadow:var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);--tw-ring-shadow:var(--tw-ring-inset) 0 0 0 calc(3px + var(--tw-ring-offset-width)) var(--tw-ring-color)}.ring,.ring-4{box-shadow:var(--tw-ring-offset-shadow),var(--tw-ring-shadow),var(--tw-shadow,0 0 #0000)}.ring-4{--tw-ring-offset-shadow:var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);--tw-ring-shadow:var(--tw-ring-inset) 0 0 0 calc(4px + var(--tw-ring-offset-width)) var(--tw-ring-color)}.ring-cream{--tw-ring-opacity:1;--tw-ring-color:rgb(255 248 239/var(--tw-ring-opacity,1))}.drop-shadow{--tw-drop-shadow:drop-shadow(0 1px 2px rgba(0,0,0,.1)) drop-shadow(0 1px 1px rgba(0,0,0,.06))}.drop-shadow,.filter{filter:var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)}.transition{transition-property:color,background-color,border-color,text-decoration-color,fill,stroke,opacity,box-shadow,transform,filter,-webkit-backdrop-filter;transition-property:color,background-color,border-color,text-decoration-color,fill,stroke,opacity,box-shadow,transform,filter,backdrop-filter;transition-property:color,background-color,border-color,text-decoration-color,fill,stroke,opacity,box-shadow,transform,filter,backdrop-filter,-webkit-backdrop-filter;transition-timing-function:cubic-bezier(.4,0,.2,1);transition-duration:.15s}.ease-in-out{transition-timing-function:cubic-bezier(.4,0,.2,1)}.ease-out{transition-timing-function:cubic-bezier(0,0,.2,1)}.hover\:bg-brand-deep:hover{--tw-bg-opacity:1;background-color:rgb(255 99 0/var(--tw-bg-opacity,1))}.hover\:bg-brand-leaf:hover{--tw-bg-opacity:1;background-color:rgb(31 157 85/var(--tw-bg-opacity,1))}.active\:translate-y-0\.5:active{--tw-translate-y:0.125rem;transform:translate(var(--tw-translate-x),var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.disabled\:opacity-40:disabled{opacity:.4}.disabled\:saturate-50:disabled{--tw-saturate:saturate(.5);filter:var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)}@media (min-width:640px){.sm\:h-\[860px\]{height:860px}.sm\:max-h-\[92vh\]{max-height:92vh}.sm\:rounded-\[40px\]{border-radius:40px}.sm\:p-5{padding:1.25rem}.sm\:ring-\[10px\]{--tw-ring-offset-shadow:var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);--tw-ring-shadow:var(--tw-ring-inset) 0 0 0 calc(10px + var(--tw-ring-offset-width)) var(--tw-ring-color);box-shadow:var(--tw-ring-offset-shadow),var(--tw-ring-shadow),var(--tw-shadow,0 0 #0000)}.sm\:ring-black\/85{--tw-ring-color:rgba(0,0,0,.85)}}
+</style>
+<!-- 丸ゴシックで親しみやすいポップ感を -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;500;700;800;900&display=swap" rel="stylesheet" />
+
+<style>
+  html, body { -webkit-tap-highlight-color: transparent; }
+  /* M PLUS Rounded 1c が無いオフライン環境でも崩れないフォールバック */
+  body { font-family: "M PLUS Rounded 1c", "Hiragino Maru Gothic ProN", "Quicksand", "Yu Gothic UI", "Meiryo", system-ui, sans-serif; }
+
+  /* スクロールバー非表示（アプリ感） */
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+  /* 画面遷移アニメ */
+  @keyframes screenIn { from { opacity: 0; transform: translateY(14px) scale(.99); } to { opacity: 1; transform: none; } }
+  .animate-in { animation: screenIn .42s cubic-bezier(.2,.8,.2,1) both; }
+
+  @keyframes pop { 0%{transform:scale(.8);opacity:0} 60%{transform:scale(1.06)} 100%{transform:scale(1);opacity:1} }
+  .animate-pop { animation: pop .5s cubic-bezier(.2,.9,.3,1.4) both; }
+
+  @keyframes floaty { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+  .floaty { animation: floaty 3s ease-in-out infinite; }
+
+  @keyframes shakeX { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-7px)} 40%{transform:translateX(7px)} 60%{transform:translateX(-5px)} 80%{transform:translateX(5px)} }
+  .shake { animation: shakeX .45s both; }
+
+  @keyframes pressWiggle { 0%,100%{transform:rotate(0)} 25%{transform:rotate(-3deg)} 75%{transform:rotate(3deg)} }
+  .wiggle { animation: pressWiggle .4s ease-in-out; }
+
+  /* 選択カードの跳ね返り */
+  .tap { transition: transform .12s ease, box-shadow .2s ease, background-color .2s ease, border-color .2s ease; }
+  .tap:active { transform: scale(.96); }
+
+  /* 紙吹雪 */
+  @keyframes confettiFall { 0%{transform:translateY(-20px) rotate(0);opacity:1} 100%{transform:translateY(620px) rotate(720deg);opacity:0} }
+  .confetti-piece { position:absolute; top:0; width:10px; height:14px; border-radius:2px; will-change:transform; animation:confettiFall 2.6s linear forwards; }
+
+  /* QRのふわっと出現 */
+  @keyframes qrIn { from{opacity:0; transform:scale(.85)} to{opacity:1; transform:scale(1)} }
+  .qr-in { animation: qrIn .5s ease both; }
+
+  /* 解錠リングの波紋 */
+  @keyframes ring { 0%{transform:scale(.6);opacity:.7} 100%{transform:scale(1.8);opacity:0} }
+  .ring-burst { animation: ring .7s ease-out forwards; }
+
+  /* プログレスバーのにゅっ */
+  .seg { transition: background-color .35s ease, color .35s ease; }
+
+  /* ===== 料理写真風カード（画像ファイル不要・CSSのみ＝オフラインOK） ===== */
+  .dish-hero { position:relative; height:168px; overflow:hidden; }
+  .dish-hero[data-dish="cabbage"]{ background:radial-gradient(125% 95% at 50% 8%, #ffd8a0 0%, #ff9d4d 46%, #ef6c12 100%); }
+  .dish-hero[data-dish="onion"]  { background:radial-gradient(125% 95% at 50% 8%, #ffe7a3 0%, #ffc444 46%, #e7920a 100%); }
+  .dish-hero[data-dish="tofu"]   { background:radial-gradient(125% 95% at 50% 8%, #ff9f7c 0%, #ef5a4c 50%, #b8312c 100%); }
+  .dish-hero[data-dish="none"]   { background:radial-gradient(125% 95% at 50% 8%, #bff0a6 0%, #5fc46a 46%, #259a54 100%); }
+  .dish-hero .plate {
+    position:absolute; left:50%; top:55%; transform:translate(-50%,-50%);
+    width:128px; height:128px; border-radius:50%;
+    background:radial-gradient(circle at 38% 30%, #ffffff 0%, #f3ebdd 62%, #e4d4bf 100%);
+    box-shadow: 0 20px 34px -10px rgba(0,0,0,.4), inset 0 -7px 14px rgba(0,0,0,.10), inset 0 4px 8px rgba(255,255,255,.7);
+    display:grid; place-items:center;
+  }
+  .dish-hero .plate::after { content:""; position:absolute; inset:13px; border-radius:50%; box-shadow: inset 0 0 0 2px rgba(0,0,0,.05); }
+  .dish-hero .food { font-size:64px; line-height:1; filter:drop-shadow(0 7px 6px rgba(0,0,0,.28)); transform:translateY(-2px); }
+  .dish-hero .decor { position:absolute; font-size:24px; opacity:.4; filter:saturate(1.2) drop-shadow(0 2px 3px rgba(0,0,0,.2)); }
+  .dish-hero .steam {
+    position:absolute; top:26%; width:11px; height:40px; border-radius:50%;
+    background:linear-gradient(to top, rgba(255,255,255,0), rgba(255,255,255,.85));
+    filter:blur(4px); animation:steam 2.8s ease-in-out infinite;
+  }
+  @keyframes steam { 0%{opacity:0; transform:translateY(12px) scaleX(1)} 35%{opacity:.85} 100%{opacity:0; transform:translateY(-30px) scaleX(1.7)} }
+  .dish-hero .glow { position:absolute; inset:0; pointer-events:none;
+    background:linear-gradient(to top, rgba(0,0,0,.22), transparent 42%), radial-gradient(80% 50% at 50% 120%, rgba(0,0,0,.18), transparent); }
+  .dish-hero .shine { position:absolute; top:-20%; left:-10%; width:60%; height:80%; transform:rotate(20deg);
+    background:linear-gradient(to bottom, rgba(255,255,255,.28), transparent); filter:blur(8px); pointer-events:none; }
+
+  /* ===== インパクト画面の棒グラフ ===== */
+  .bar { width:100%; border-radius:8px 8px 3px 3px; background:linear-gradient(to top,#2FBF5B,#7BE08A);
+         height:0%; transition:height .9s cubic-bezier(.2,.8,.2,1); align-self:flex-end; }
+  .bar.accent { background:linear-gradient(to top,#FF6300,#FFA64D); }
+
+  @keyframes livePulse { 0%,100%{opacity:1; transform:scale(1)} 50%{opacity:.4; transform:scale(.7)} }
+  .live-dot { animation:livePulse 1.4s ease-in-out infinite; }
+</style>
+</head>
+
+<body class="bg-gradient-to-b from-[#FFE3C2] via-[#FFEFD9] to-[#E9F8EC] min-h-screen flex items-center justify-center p-0 sm:p-5 text-ink">
+
+  <!-- ========== スマホフレーム ========== -->
+  <div class="relative w-full max-w-[430px] h-[100svh] sm:h-[860px] sm:max-h-[92vh] bg-cream sm:rounded-[40px] overflow-hidden shadow-2xl sm:ring-[10px] sm:ring-black/85 flex flex-col">
+
+    <!-- ヘッダー（ロゴ） -->
+    <header class="shrink-0 bg-gradient-to-r from-brand-deep to-brand-orange text-white px-5 pt-5 pb-4 relative overflow-hidden">
+      <div class="absolute -right-6 -top-8 w-28 h-28 bg-white/10 rounded-full"></div>
+      <div class="absolute right-10 top-8 w-12 h-12 bg-white/10 rounded-full"></div>
+      <div class="flex items-center gap-3 relative">
+        <div class="w-11 h-11 rounded-2xl bg-white grid place-items-center text-2xl shadow-md floaty">🦸‍♂️</div>
+        <div class="leading-tight">
+          <div class="text-[11px] font-bold tracking-wider text-white/80">ZERO FOOD-LOSS for 一人暮らし</div>
+          <h1 class="text-[19px] font-black tracking-tight">オレの食品ロスを助けてくれ</h1>
+        </div>
+      </div>
+
+      <!-- プログレス（STEP1〜3） -->
+      <div id="progress" class="hidden mt-4 grid grid-cols-3 gap-2 relative">
+        <div data-step="1" class="seg text-center text-[11px] font-bold py-1.5 rounded-full bg-white text-brand-deep">① かんたん回答</div>
+        <div data-step="2" class="seg text-center text-[11px] font-bold py-1.5 rounded-full bg-white/25 text-white">② うけとり</div>
+        <div data-step="3" class="seg text-center text-[11px] font-bold py-1.5 rounded-full bg-white/25 text-white">③ 完了</div>
+      </div>
+    </header>
+
+    <!-- スクロール領域 -->
+    <main id="scroll" class="flex-1 overflow-y-auto no-scrollbar relative">
+
+      <!-- ========== 画面0：ウェルカム ========== -->
+      <section id="screen-welcome" class="screen animate-in min-h-full flex flex-col px-6 py-8">
+        <div class="flex-1 flex flex-col items-center justify-center text-center">
+          <div class="relative mb-6">
+            <div class="text-[88px] leading-none floaty">🧊</div>
+            <div class="absolute -right-3 -top-2 bg-brand-green text-white text-xs font-black px-3 py-1 rounded-full shadow-md rotate-6">もう余らせない</div>
+          </div>
+          <h2 class="text-[28px] font-black leading-snug">冷蔵庫の“やばい食材”、<br><span class="text-brand-deep">3タップ</span>で<span class="text-brand-leaf">救出</span>。</h2>
+          <p class="mt-4 text-[15px] font-medium text-ink/70 leading-relaxed">
+            実家の仕送り × 冷蔵庫の余り物を、<br>格安の<b class="text-brand-deep">冷凍ソース／弁当</b>に。<br>受け取りは<b>ロッカーなら¥390〜</b>。
+          </p>
+
+          <div class="mt-6 flex gap-2 text-[12px] font-bold text-ink/60">
+            <span class="bg-white px-3 py-1.5 rounded-full shadow-sm">⌚ 約10秒</span>
+            <span class="bg-white px-3 py-1.5 rounded-full shadow-sm">⌨️ 文字入力ゼロ</span>
+            <span class="bg-white px-3 py-1.5 rounded-full shadow-sm">💸 最安¥390</span>
+          </div>
+        </div>
+
+        <button data-go="screen-1"
+          class="tap w-full bg-brand-orange hover:bg-brand-deep text-white text-lg font-black py-4 rounded-2xl shadow-card active:translate-y-0.5">
+          3タップ診断をはじめる →
+        </button>
+        <button data-go="screen-impact"
+          class="tap w-full mt-2 bg-white text-brand-leaf border-2 border-brand-green/40 text-[15px] font-black py-3 rounded-2xl active:translate-y-0.5">
+          📊 これまでのインパクトを見る
+        </button>
+        <p class="text-center text-[11px] text-ink/40 mt-3 font-medium">※ Startup Weekend デモ用プロトタイプ</p>
+      </section>
+
+      <!-- ========== 画面①：3タップ回答 ========== -->
+      <section id="screen-1" class="screen hidden px-5 py-6">
+        <div class="text-center mb-5">
+          <span class="text-xs font-black text-brand-deep bg-orange-100 px-3 py-1 rounded-full">STEP 1</span>
+          <h2 class="text-[22px] font-black mt-2">かんたん3タップ回答</h2>
+          <p class="text-[13px] text-ink/60 font-medium">タップするだけ。キミに最適な一食を診断するよ。</p>
+        </div>
+
+        <!-- 質問A -->
+        <div id="qA" class="bg-white rounded-3xl p-5 shadow-sm mb-4 border-2 border-transparent">
+          <div class="flex items-start gap-2 mb-3">
+            <span class="text-xl">📦</span>
+            <p class="font-black text-[15px] leading-snug">今週、実家からの仕送り（米・野菜）はある？</p>
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <button data-q="supply" data-val="yes"
+              class="opt tap py-5 rounded-2xl bg-cream border-2 border-gray-200 font-black text-[15px] flex flex-col items-center gap-1">
+              <span class="text-3xl">📦</span><span>ある！</span>
+            </button>
+            <button data-q="supply" data-val="no"
+              class="opt tap py-5 rounded-2xl bg-cream border-2 border-gray-200 font-black text-[15px] flex flex-col items-center gap-1">
+              <span class="text-3xl">❌</span><span>ない…</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 質問B -->
+        <div id="qB" class="bg-white rounded-3xl p-5 shadow-sm mb-5 border-2 border-transparent">
+          <div class="flex items-start gap-2 mb-1">
+            <span class="text-xl">🧊</span>
+            <p class="font-black text-[15px] leading-snug">今、冷蔵庫で余らせてヤバい食材は？</p>
+          </div>
+          <p class="text-[12px] text-ink/50 font-bold mb-3 ml-7">複数えらべるよ（タップで選択）</p>
+          <div class="grid grid-cols-2 gap-3">
+            <button data-q="ing" data-val="cabbage"
+              class="opt tap py-5 rounded-2xl bg-cream border-2 border-gray-200 font-black text-[15px] flex flex-col items-center gap-1 relative">
+              <span class="check hidden absolute top-2 right-2 w-6 h-6 bg-brand-green text-white rounded-full grid place-items-center text-sm">✓</span>
+              <span class="text-3xl">🥬</span><span>キャベツ</span>
+            </button>
+            <button data-q="ing" data-val="onion"
+              class="opt tap py-5 rounded-2xl bg-cream border-2 border-gray-200 font-black text-[15px] flex flex-col items-center gap-1 relative">
+              <span class="check hidden absolute top-2 right-2 w-6 h-6 bg-brand-green text-white rounded-full grid place-items-center text-sm">✓</span>
+              <span class="text-3xl">🧅</span><span>玉ねぎ</span>
+            </button>
+            <button data-q="ing" data-val="tofu"
+              class="opt tap py-5 rounded-2xl bg-cream border-2 border-gray-200 font-black text-[15px] flex flex-col items-center gap-1 relative">
+              <span class="check hidden absolute top-2 right-2 w-6 h-6 bg-brand-green text-white rounded-full grid place-items-center text-sm">✓</span>
+              <span class="text-3xl">🧊</span><span>豆腐・納豆</span>
+            </button>
+            <button data-q="ing" data-val="none"
+              class="opt tap py-5 rounded-2xl bg-cream border-2 border-gray-200 font-black text-[15px] flex flex-col items-center gap-1 relative">
+              <span class="check hidden absolute top-2 right-2 w-6 h-6 bg-brand-green text-white rounded-full grid place-items-center text-sm">✓</span>
+              <span class="text-3xl">🤷</span><span>特になし</span>
+            </button>
+          </div>
+        </div>
+
+        <button id="diagnose" data-go="screen-2"
+          class="tap w-full bg-brand-green hover:bg-brand-leaf text-white text-lg font-black py-4 rounded-2xl shadow-[0_14px_30px_-12px_rgba(47,191,91,0.6)] active:translate-y-0.5">
+          🩺 診断して助けてもらう
+        </button>
+      </section>
+
+      <!-- ========== 画面②：提案＋ロッカー受取 ========== -->
+      <section id="screen-2" class="screen hidden px-5 py-6">
+        <div class="text-center mb-4">
+          <span class="text-xs font-black text-brand-deep bg-orange-100 px-3 py-1 rounded-full">STEP 2</span>
+          <h2 class="text-[22px] font-black mt-2">キミ専用メニューが完成！</h2>
+        </div>
+
+        <!-- 動的メニュー提案 -->
+        <div id="suggestion" class="mb-6"></div>
+
+        <!-- ロッカー受取方式 -->
+        <div class="flex items-center gap-2 mb-3">
+          <span class="text-xl">📍</span>
+          <h3 class="font-black text-[16px]">受け取り方法をえらぶ</h3>
+          <span class="text-[10px] font-black text-white bg-brand-orange px-2 py-0.5 rounded-full">ロッカー受取方式</span>
+        </div>
+
+        <div id="pickups" class="space-y-3 mb-5"></div>
+
+        <!-- 受取時間（何限終わり） -->
+        <div class="flex items-center gap-2 mb-1">
+          <span class="text-xl">🕐</span>
+          <h3 class="font-black text-[16px]">受取時間をえらぶ</h3>
+          <span class="text-[10px] font-black text-white bg-brand-green px-2 py-0.5 rounded-full">何限終わり？</span>
+        </div>
+        <p class="text-[12px] text-ink/50 font-bold mb-3 ml-7">授業終わりに取りに行く時間をタップ</p>
+        <div id="timeslots" class="grid grid-cols-3 gap-2.5 mb-5"></div>
+
+        <button id="confirm" data-go="screen-3"
+          class="tap w-full bg-brand-orange hover:bg-brand-deep text-white text-lg font-black py-4 rounded-2xl shadow-card active:translate-y-0.5 disabled:opacity-40 disabled:saturate-50">
+          注文を確定する
+        </button>
+        <button data-go="screen-1" class="tap w-full text-ink/50 text-sm font-bold py-3 mt-1">← 回答をやり直す</button>
+      </section>
+
+      <!-- ========== 画面③：完了＋ロッカー解錠 ========== -->
+      <section id="screen-3" class="screen hidden px-5 py-6 relative">
+        <div id="confetti" class="absolute inset-0 pointer-events-none overflow-hidden"></div>
+
+        <div class="text-center relative">
+          <div class="text-[72px] animate-pop">🎉</div>
+          <h2 class="text-[24px] font-black leading-snug mt-1">注文が完了しました！</h2>
+          <p class="text-[15px] font-bold text-brand-leaf mt-1">学校帰りにロッカーへGO！🏃‍♂️💨</p>
+        </div>
+
+        <!-- 受取情報カード -->
+        <div id="receipt" class="bg-white rounded-3xl p-5 shadow-card mt-5 border-2 border-orange-100"></div>
+
+        <!-- QR -->
+        <div class="bg-white rounded-3xl p-5 shadow-sm mt-4 text-center">
+          <p class="font-black text-[14px] mb-1">📷 受け取りQRコード</p>
+          <p class="text-[12px] text-ink/50 font-bold mb-3">ロッカーのリーダーにかざしてね</p>
+          <div id="qr" class="qr-in w-44 h-44 mx-auto rounded-2xl overflow-hidden ring-4 ring-cream shadow-inner bg-white"></div>
+          <p id="pickup-code" class="mt-3 font-mono font-black text-lg tracking-[0.3em] text-ink"></p>
+        </div>
+
+        <!-- 解錠ボタン -->
+        <div class="mt-4 relative">
+          <button id="unlockBtn" class="tap w-full bg-ink text-white text-lg font-black py-5 rounded-2xl shadow-pop active:translate-y-0.5 relative overflow-hidden">
+            <span id="unlockIcon" class="text-2xl align-middle mr-2">🔒</span>
+            <span id="unlockText" class="align-middle">ロッカーを開ける</span>
+          </button>
+        </div>
+
+        <!-- 節約バッジ -->
+        <div class="mt-5 bg-gradient-to-r from-brand-green to-brand-leaf text-white rounded-3xl p-5 text-center shadow-[0_14px_30px_-12px_rgba(47,191,91,0.6)]">
+          <p class="text-[13px] font-bold opacity-90">🌱 この注文で救った食品ロス</p>
+          <p class="text-[30px] font-black leading-tight mt-1">約 480g <span class="text-[16px]">/ ¥620 お得</span></p>
+          <p class="text-[12px] font-bold opacity-90 mt-1">捨てるはずだった食材が、今日のごはんに。</p>
+        </div>
+
+        <button data-go="screen-impact"
+          class="tap w-full mt-3 bg-white text-brand-leaf border-2 border-brand-green/40 text-[15px] font-black py-3 rounded-2xl active:translate-y-0.5">
+          📊 みんなの成果（インパクト）を見る
+        </button>
+        <button data-go="screen-welcome" id="restart" class="tap w-full text-ink/50 text-sm font-bold py-4 mt-1">↻ 最初からもう一度ためす</button>
+      </section>
+
+      <!-- ========== 画面④：インパクト（ピッチ用の数字） ========== -->
+      <section id="screen-impact" class="screen hidden px-5 py-6">
+        <div class="text-center mb-4">
+          <span class="inline-flex items-center gap-1.5 text-xs font-black text-white bg-brand-leaf px-3 py-1 rounded-full">
+            <span class="live-dot w-1.5 h-1.5 bg-white rounded-full"></span> LIVE 実績
+          </span>
+          <h2 class="text-[22px] font-black mt-2">みんなで救った食品ロス</h2>
+          <p class="text-[13px] text-ink/60 font-medium">「オレの食品ロスを助けてくれ」累計インパクト</p>
+        </div>
+
+        <!-- ヒーロー：累計救出食数 -->
+        <div class="bg-gradient-to-br from-brand-orange to-brand-deep text-white rounded-3xl p-6 text-center shadow-card relative overflow-hidden">
+          <div class="absolute -right-8 -top-8 w-32 h-32 bg-white/10 rounded-full"></div>
+          <p class="text-[13px] font-bold opacity-90 relative">🍱 累計で救った食数</p>
+          <p class="relative mt-1"><span id="imp-meals" class="text-[44px] font-black leading-none">0</span></p>
+          <p class="text-[12px] font-bold opacity-90 mt-2 relative">＝ 捨てられるはずだった食材を、ぜんぶ“ごはん”に。</p>
+        </div>
+
+        <!-- スタッツグリッド -->
+        <div class="grid grid-cols-2 gap-3 mt-3">
+          <div class="bg-white rounded-2xl p-4 shadow-sm">
+            <p class="text-[11px] font-bold text-ink/55">🌍 CO₂ 削減量</p>
+            <p class="text-[24px] font-black text-brand-leaf mt-0.5"><span id="imp-co2">0</span></p>
+          </div>
+          <div class="bg-white rounded-2xl p-4 shadow-sm">
+            <p class="text-[11px] font-bold text-ink/55">♻️ 食品ロス削減</p>
+            <p class="text-[24px] font-black text-brand-leaf mt-0.5"><span id="imp-waste">0</span></p>
+          </div>
+          <div class="bg-white rounded-2xl p-4 shadow-sm">
+            <p class="text-[11px] font-bold text-ink/55">💰 学生の節約総額</p>
+            <p class="text-[24px] font-black text-brand-deep mt-0.5"><span id="imp-save">0</span></p>
+          </div>
+          <div class="bg-white rounded-2xl p-4 shadow-sm">
+            <p class="text-[11px] font-bold text-ink/55">📈 リピート率</p>
+            <p class="text-[24px] font-black text-brand-deep mt-0.5"><span id="imp-repeat">0</span></p>
+          </div>
+          <div class="bg-white rounded-2xl p-4 shadow-sm">
+            <p class="text-[11px] font-bold text-ink/55">🏫 提携ロッカー</p>
+            <p class="text-[24px] font-black text-ink mt-0.5"><span id="imp-lockers">0</span></p>
+          </div>
+          <div class="bg-white rounded-2xl p-4 shadow-sm">
+            <p class="text-[11px] font-bold text-ink/55">👨‍🎓 利用学生</p>
+            <p class="text-[24px] font-black text-ink mt-0.5"><span id="imp-users">0</span></p>
+          </div>
+        </div>
+
+        <!-- 成長グラフ -->
+        <div class="bg-white rounded-3xl p-5 shadow-sm mt-3">
+          <div class="flex items-center justify-between mb-3">
+            <p class="font-black text-[14px]">📊 月別 救出食数</p>
+            <span class="text-[11px] font-black text-brand-leaf bg-green-50 px-2 py-0.5 rounded-full">前月比 +33%</span>
+          </div>
+          <div id="imp-bars" class="flex items-end gap-2 h-28">
+            <div class="flex-1 flex flex-col items-center gap-1"><div class="flex-1 w-full flex"><div class="bar"></div></div><span class="text-[10px] font-bold text-ink/45">1月</span></div>
+            <div class="flex-1 flex flex-col items-center gap-1"><div class="flex-1 w-full flex"><div class="bar"></div></div><span class="text-[10px] font-bold text-ink/45">2月</span></div>
+            <div class="flex-1 flex flex-col items-center gap-1"><div class="flex-1 w-full flex"><div class="bar"></div></div><span class="text-[10px] font-bold text-ink/45">3月</span></div>
+            <div class="flex-1 flex flex-col items-center gap-1"><div class="flex-1 w-full flex"><div class="bar"></div></div><span class="text-[10px] font-bold text-ink/45">4月</span></div>
+            <div class="flex-1 flex flex-col items-center gap-1"><div class="flex-1 w-full flex"><div class="bar"></div></div><span class="text-[10px] font-bold text-ink/45">5月</span></div>
+            <div class="flex-1 flex flex-col items-center gap-1"><div class="flex-1 w-full flex"><div class="bar accent"></div></div><span class="text-[10px] font-black text-brand-deep">6月</span></div>
+          </div>
+        </div>
+
+        <!-- 市場規模（TAM） -->
+        <div class="bg-ink text-white rounded-3xl p-5 mt-3 relative overflow-hidden">
+          <div class="absolute -left-6 -bottom-8 w-28 h-28 bg-brand-orange/20 rounded-full"></div>
+          <p class="text-[12px] font-bold opacity-80 relative">🎯 ねらう市場（TAM）</p>
+          <p class="text-[15px] font-black leading-relaxed mt-2 relative">
+            国内の一人暮らし大学生 <span class="text-brand-orange">約150万人</span>。<br>
+            1人が捨てる食品ロスは年 <span class="text-brand-orange">約6万円</span>分。
+          </p>
+          <div class="mt-3 pt-3 border-t border-white/15 flex items-end justify-between relative">
+            <span class="text-[12px] font-bold opacity-80">＝ 潜在市場</span>
+            <span class="text-[26px] font-black text-brand-orange">約 900億円<span class="text-[13px] text-white/70">/年</span></span>
+          </div>
+        </div>
+
+        <button data-go="screen-welcome" class="tap w-full mt-4 bg-brand-orange text-white text-[15px] font-black py-3.5 rounded-2xl active:translate-y-0.5">
+          ← トップにもどる
+        </button>
+      </section>
+
+    </main>
+  </div>
+
+<script>
+  /* ====================== 状態 ====================== */
+  const state = { supply: null, ing: new Set(), pickup: null, timeslot: null, order: null };
+
+  /* ====================== データ ====================== */
+  const INGREDIENTS = {
+    cabbage: { label: 'キャベツ', emoji: '🥬' },
+    onion:   { label: '玉ねぎ',   emoji: '🧅' },
+    tofu:    { label: '豆腐・納豆', emoji: '🧊' },
+    none:    { label: '特になし',  emoji: '🤷' },
+  };
+
+  const RECIPES = {
+    cabbage: { title: '回鍋肉（ホイコーロー）の冷凍ソース', emoji: '🥬', tag: '中華', kcal: 580, cook: 3,
+      rating: '4.8', orders: '1.2k', decor: ['🌶️','🍚','🥢'],
+      desc: '余らせがちなキャベツがシャキッと主役級！レンジでチンしてご飯にのせるだけ。' },
+    onion:   { title: 'とろたま親子丼の冷凍ソース', emoji: '🧅', tag: '和食', kcal: 620, cook: 4,
+      rating: '4.9', orders: '2.1k', decor: ['🥚','🍚','🌿'],
+      desc: '玉ねぎの甘みがしみしみ。卵を1個落とせば、お店の親子丼が完成。' },
+    tofu:    { title: '本格 麻婆豆腐の冷凍ソース', emoji: '🧊', tag: '中華', kcal: 540, cook: 3,
+      rating: '4.7', orders: '980', decor: ['🌶️','🍚','🥢'],
+      desc: '豆腐・納豆を使い切る！ピリ辛で白米が止まらない王道メニュー。' },
+    none:    { title: 'ガッツリ ガパオライスの冷凍ソース', emoji: '🍳', tag: 'エスニック', kcal: 650, cook: 4,
+      rating: '4.6', orders: '760', decor: ['🌿','🌶️','🍚'],
+      desc: '冷蔵庫が空っぽでもOK。これ一袋でお腹も心も満たされる。' },
+  };
+
+  const PICKUPS = {
+    A: { icon:'🏫', title:'大学サークル棟の冷凍ロッカー', sub:'徒歩2分・24時間受取OK', price:390, badge:'お得！', best:true },
+    B: { icon:'🏢', title:'学生マンション1Fロッカー', sub:'最寄り駅チカ・徒歩5分', price:390, badge:'お得！', best:true },
+    C: { icon:'🛵', title:'アパートへ個別配送', sub:'玄関先まで・時間指定OK', price:650, badge:'通常', best:false },
+  };
+
+  // 受取時間（何限終わりに取りに行くか）。時刻は一般的な大学の時間割を想定（学校に合わせて編集OK）
+  const TIMESLOTS = [
+    { id:'p1', label:'1限終わり', time:'10:30' },
+    { id:'p2', label:'2限終わり', time:'12:10' },
+    { id:'p3', label:'3限終わり', time:'14:40' },
+    { id:'p4', label:'4限終わり', time:'16:20' },
+    { id:'p5', label:'5限終わり', time:'18:00' },
+    { id:'p6', label:'6限終わり', time:'19:40' },
+  ];
+
+  const PRIORITY = ['cabbage','tofu','onion','none'];
+
+  /* ====================== 画面遷移 ====================== */
+  const scroll = document.getElementById('scroll');
+  function go(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
+    const el = document.getElementById(id);
+    el.classList.remove('hidden');
+    el.classList.remove('animate-in'); void el.offsetWidth; el.classList.add('animate-in');
+    scroll.scrollTo({ top: 0, behavior: 'instant' in scroll ? 'instant' : 'auto' });
+    updateProgress(id);
+    if (id === 'screen-2') renderScreen2();
+    if (id === 'screen-3') renderScreen3();
+    if (id === 'screen-impact') renderImpact();
+  }
+
+  function updateProgress(id) {
+    const bar = document.getElementById('progress');
+    const map = { 'screen-1': 1, 'screen-2': 2, 'screen-3': 3 };
+    if (!map[id]) { bar.classList.add('hidden'); return; }
+    bar.classList.remove('hidden');
+    const cur = map[id];
+    bar.querySelectorAll('[data-step]').forEach(seg => {
+      const n = +seg.dataset.step;
+      if (n <= cur) { seg.className = 'seg text-center text-[11px] font-bold py-1.5 rounded-full bg-white text-brand-deep'; }
+      else { seg.className = 'seg text-center text-[11px] font-bold py-1.5 rounded-full bg-white/25 text-white'; }
+    });
+  }
+
+  /* 全ての data-go ボタンを配線 */
+  document.body.addEventListener('click', (e) => {
+    const btn = e.target.closest('[data-go]');
+    if (!btn) return;
+    const target = btn.dataset.go;
+
+    // 「診断して助けてもらう」はバリデーション
+    if (btn.id === 'diagnose') {
+      if (!validateStep1()) return;
+    }
+    // 「注文を確定する」は受取場所・受取時間の選択が必要
+    if (btn.id === 'confirm') {
+      let ok = true;
+      if (!state.pickup) { shakeEl('pickups'); ok = false; }
+      if (!state.timeslot) { shakeEl('timeslots'); ok = false; }
+      if (!ok) return;
+      makeOrder();
+    }
+    if (btn.id === 'restart') resetAll();
+    go(target);
+  });
+
+  /* ====================== 画面①：選択ロジック ====================== */
+  document.querySelectorAll('#screen-1 .opt').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const q = btn.dataset.q, val = btn.dataset.val;
+      btn.classList.add('wiggle'); setTimeout(()=>btn.classList.remove('wiggle'),400);
+
+      if (q === 'supply') {
+        state.supply = val;
+        document.querySelectorAll('[data-q="supply"]').forEach(b => setOpt(b, b===btn));
+        document.getElementById('qA').classList.remove('border-red-300');
+      }
+
+      if (q === 'ing') {
+        // 「特になし」は排他
+        if (val === 'none') {
+          state.ing.clear(); state.ing.add('none');
+        } else {
+          state.ing.delete('none');
+          state.ing.has(val) ? state.ing.delete(val) : state.ing.add(val);
+        }
+        document.querySelectorAll('[data-q="ing"]').forEach(b => setOpt(b, state.ing.has(b.dataset.val)));
+        document.getElementById('qB').classList.remove('border-red-300');
+      }
+    });
+  });
+
+  function setOpt(btn, on) {
+    const check = btn.querySelector('.check');
+    if (on) {
+      btn.classList.add('bg-orange-50','border-brand-orange','shadow-card','-translate-y-0.5');
+      btn.classList.remove('bg-cream','border-gray-200');
+      if (check) check.classList.remove('hidden');
+    } else {
+      btn.classList.remove('bg-orange-50','border-brand-orange','shadow-card','-translate-y-0.5');
+      btn.classList.add('bg-cream','border-gray-200');
+      if (check) check.classList.add('hidden');
+    }
+  }
+
+  function validateStep1() {
+    let ok = true;
+    if (!state.supply) { flash('qA'); ok = false; }
+    if (state.ing.size === 0) { flash('qB'); ok = false; }
+    return ok;
+  }
+  function flash(id) {
+    const el = document.getElementById(id);
+    el.classList.add('shake','border-red-300');
+    setTimeout(()=>el.classList.remove('shake'),500);
+    if (id === 'qA' || (id==='qB' && !state.supply===false)) el.scrollIntoView({behavior:'smooth', block:'center'});
+  }
+  function shakeEl(id) {
+    const el = document.getElementById(id);
+    el.classList.add('shake');
+    el.scrollIntoView({behavior:'smooth', block:'center'});
+    setTimeout(()=>el.classList.remove('shake'),500);
+  }
+
+  /* ====================== 画面②：動的レンダリング ====================== */
+  function mainIngredient() {
+    for (const k of PRIORITY) if (state.ing.has(k)) return k;
+    return 'none';
+  }
+
+  function renderScreen2() {
+    const mainKey = mainIngredient();
+    const r = RECIPES[mainKey];
+    const riceWord = state.supply === 'yes' ? '実家のお米' : 'ごはんパック';
+
+    // 見出し文
+    let headline;
+    if (mainKey === 'none') headline = `${riceWord}で完成する『${r.title}』をセットしました！`;
+    else headline = `${riceWord}＋余った${INGREDIENTS[mainKey].label}で完成する『${r.title}』をセットしました！`;
+
+    // 複数食材のサブ注記
+    const others = [...state.ing].filter(k => k !== mainKey && k !== 'none').map(k => INGREDIENTS[k].label);
+    const comboNote = others.length ? `<p class="mt-2 text-[12px] font-black text-brand-leaf bg-green-50 rounded-xl px-3 py-2">＋ ${others.join('・')}も一緒に使い切れるレシピだよ◎</p>` : '';
+
+    document.getElementById('suggestion').innerHTML = `
+      <div class="bg-brand-green/10 border-2 border-brand-green/30 rounded-2xl p-3 mb-3 text-center animate-pop">
+        <span class="text-[13px] font-black text-brand-leaf">✅ 診断完了！キミの冷蔵庫を救う一食はこれ</span>
+      </div>
+      <div class="bg-white rounded-3xl overflow-hidden shadow-card border-2 border-orange-100 animate-pop">
+        <!-- 料理写真風ヒーロー -->
+        <div class="dish-hero" data-dish="${mainKey}">
+          <div class="shine"></div>
+          <span class="decor" style="left:9%; top:16%">${r.decor[0]}</span>
+          <span class="decor" style="right:11%; top:22%">${r.decor[1]}</span>
+          <span class="decor" style="left:15%; bottom:16%">${r.decor[2]}</span>
+          <span class="decor" style="right:14%; bottom:13%; font-size:18px">${r.decor[0]}</span>
+          <span class="steam" style="left:45%; animation-delay:0s"></span>
+          <span class="steam" style="left:51%; animation-delay:.6s"></span>
+          <span class="steam" style="left:48%; animation-delay:1.2s"></span>
+          <div class="plate"><span class="food">${r.emoji}</span></div>
+          <span class="absolute top-3 left-3 bg-white/90 text-brand-deep text-[11px] font-black px-2.5 py-1 rounded-full shadow">🔥 学内人気</span>
+          <span class="absolute top-3 right-3 bg-black/35 text-white text-[11px] font-black px-2.5 py-1 rounded-full">⏱ ${r.cook}分でできる</span>
+          <div class="glow"></div>
+        </div>
+        <!-- 情報 -->
+        <div class="p-5">
+          <p class="text-[14px] font-black leading-relaxed mb-3">${headline}</p>
+          <div class="flex items-center gap-2 mb-1 flex-wrap">
+            <span class="text-[10px] font-black text-white bg-brand-green px-2 py-0.5 rounded-full">${r.tag}</span>
+            <span class="text-[12px] font-black text-amber-500">⭐ ${r.rating}</span>
+            <span class="text-[11px] font-bold text-ink/45">(${r.orders}+ 注文)</span>
+            <span class="text-[11px] font-bold text-ink/45">🔥 ${r.kcal}kcal</span>
+          </div>
+          <h4 class="font-black text-[16px] leading-snug">${r.title}</h4>
+          <p class="text-[12px] text-ink/60 font-medium mt-1 leading-snug">${r.desc}</p>
+          ${comboNote}
+          <div class="flex items-end justify-between mt-4 pt-4 border-t-2 border-dashed border-gray-200">
+            <span class="text-[12px] font-bold text-ink/50">商品代金（食材付き）</span>
+            <div class="text-right">
+              <span class="text-[13px] text-ink/40 font-bold line-through mr-1">¥890</span>
+              <span class="text-[24px] font-black text-brand-deep">¥390</span>
+            </div>
+          </div>
+        </div>
+      </div>`;
+
+    // 受取オプション
+    const wrap = document.getElementById('pickups');
+    wrap.innerHTML = Object.entries(PICKUPS).map(([key, p]) => `
+      <button data-pickup="${key}" class="pick tap w-full text-left bg-white rounded-2xl p-4 border-2 border-gray-200 flex items-center gap-3 relative">
+        <span class="text-3xl shrink-0">${p.icon}</span>
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center gap-2">
+            <p class="font-black text-[14px] truncate">${p.title}</p>
+          </div>
+          <p class="text-[12px] text-ink/55 font-bold">${p.sub}</p>
+        </div>
+        <div class="text-right shrink-0">
+          <span class="block text-[10px] font-black ${p.best?'text-brand-leaf':'text-ink/40'}">${p.badge}</span>
+          <span class="text-[18px] font-black ${p.best?'text-brand-deep':'text-ink'}">¥${p.price}</span>
+        </div>
+        <span class="pick-check hidden absolute -top-2 -right-2 w-7 h-7 bg-brand-orange text-white rounded-full grid place-items-center text-base shadow-md">✓</span>
+      </button>`).join('');
+
+    // 受取選択の配線
+    wrap.querySelectorAll('.pick').forEach(b => {
+      b.addEventListener('click', () => {
+        state.pickup = b.dataset.pickup;
+        wrap.querySelectorAll('.pick').forEach(x => {
+          const on = x === b;
+          const chk = x.querySelector('.pick-check');
+          if (on) { x.classList.add('border-brand-orange','bg-orange-50','shadow-card'); x.classList.remove('border-gray-200'); chk.classList.remove('hidden'); }
+          else { x.classList.remove('border-brand-orange','bg-orange-50','shadow-card'); x.classList.add('border-gray-200'); chk.classList.add('hidden'); }
+        });
+      });
+    });
+
+    // 受取時間（何限終わり）オプション
+    const wrapT = document.getElementById('timeslots');
+    wrapT.innerHTML = TIMESLOTS.map(t => `
+      <button data-slot="${t.id}" class="slot tap bg-white rounded-2xl py-3 px-2 border-2 border-gray-200 text-center relative">
+        <span class="slot-check hidden absolute -top-2 -right-2 w-6 h-6 bg-brand-green text-white rounded-full grid place-items-center text-sm shadow-md">✓</span>
+        <span class="block font-black text-[14px] leading-tight">${t.label}</span>
+        <span class="block text-[11px] font-bold text-ink/50 mt-0.5">${t.time}〜</span>
+      </button>`).join('');
+
+    wrapT.querySelectorAll('.slot').forEach(b => {
+      b.addEventListener('click', () => {
+        state.timeslot = b.dataset.slot;
+        b.classList.add('wiggle'); setTimeout(()=>b.classList.remove('wiggle'),400);
+        wrapT.querySelectorAll('.slot').forEach(x => {
+          const on = x === b;
+          const chk = x.querySelector('.slot-check');
+          if (on) { x.classList.add('border-brand-green','bg-green-50','shadow-card'); x.classList.remove('border-gray-200'); chk.classList.remove('hidden'); }
+          else { x.classList.remove('border-brand-green','bg-green-50','shadow-card'); x.classList.add('border-gray-200'); chk.classList.add('hidden'); }
+        });
+        document.getElementById('timeslots').classList.remove('shake');
+      });
+    });
+
+    // 確定ボタンの活性状態を初期化
+    state.pickup = null;
+    state.timeslot = null;
+    document.getElementById('confirm').disabled = false; // バリデーションはクリック時に実施
+  }
+
+  /* ====================== 画面③：注文＋QR＋解錠 ====================== */
+  function makeOrder() {
+    const code = String(Math.floor(1000 + Math.random()*9000));
+    const orderNo = 'SW-2026-' + String(Math.floor(100 + Math.random()*900));
+    state.order = { code, orderNo, seed: parseInt(code,10) };
+  }
+
+  function renderScreen3() {
+    const p = PICKUPS[state.pickup] || PICKUPS.A;
+    const r = RECIPES[mainIngredient()];
+    const o = state.order || { code:'1234', orderNo:'SW-2026-042', seed:1234 };
+    const slot = TIMESLOTS.find(t => t.id === state.timeslot);
+    const slotText = slot ? `本日 ${slot.label}（${slot.time}）以降` : '本日 17:00 以降';
+
+    document.getElementById('receipt').innerHTML = `
+      <div class="flex items-center gap-3 pb-3 border-b-2 border-dashed border-gray-200">
+        <div class="text-4xl">${r.emoji}</div>
+        <div class="flex-1">
+          <p class="font-black text-[14px] leading-snug">${r.title}</p>
+          <p class="text-[11px] font-bold text-ink/50">注文番号 #${o.orderNo}</p>
+        </div>
+        <span class="text-[18px] font-black text-brand-deep">¥${p.price}</span>
+      </div>
+      <div class="pt-3 space-y-2 text-[13px] font-bold">
+        <div class="flex justify-between"><span class="text-ink/55">📍 受取場所</span><span class="text-right max-w-[60%]">${p.icon} ${p.title}</span></div>
+        <div class="flex justify-between"><span class="text-ink/55">🕐 受取予定</span><span class="text-brand-leaf">${slotText}</span></div>
+        <div class="flex justify-between"><span class="text-ink/55">🔢 受取コード</span><span class="font-mono tracking-widest text-brand-deep">${o.code}</span></div>
+      </div>`;
+
+    document.getElementById('qr').innerHTML = generateQR(o.seed);
+    document.getElementById('pickup-code').textContent = o.code;
+
+    // 解錠ボタン初期化
+    const btn = document.getElementById('unlockBtn');
+    btn.disabled = false;
+    delete btn.dataset.opened;
+    btn.className = 'tap w-full bg-ink text-white text-lg font-black py-5 rounded-2xl shadow-pop active:translate-y-0.5 relative overflow-hidden';
+    document.getElementById('unlockIcon').textContent = '🔒';
+    document.getElementById('unlockText').textContent = 'ロッカーを開ける';
+
+    launchConfetti();
+  }
+
+  /* 解錠アニメ */
+  document.getElementById('unlockBtn').addEventListener('click', function() {
+    if (this.dataset.opened === '1') return;
+    const icon = document.getElementById('unlockIcon');
+    const text = document.getElementById('unlockText');
+
+    this.classList.add('shake');
+    icon.textContent = '🔓';
+    text.textContent = 'ガチャッ…';
+
+    // 波紋エフェクト
+    const ring = document.createElement('span');
+    ring.className = 'ring-burst absolute inset-0 m-auto w-24 h-24 rounded-full bg-brand-green/40';
+    this.appendChild(ring);
+    setTimeout(()=>ring.remove(), 700);
+
+    setTimeout(() => {
+      this.classList.remove('shake','bg-ink');
+      this.classList.add('bg-brand-green');
+      text.textContent = '開きました！ようこそ🎉';
+      this.dataset.opened = '1';
+      // ミニ紙吹雪
+      launchConfetti(20);
+    }, 480);
+  });
+
+  /* ====================== 画面④：インパクト数字 ====================== */
+  function countUp(el, target, opts = {}) {
+    if (!el) return;
+    const dur = opts.dur || 1400, dec = opts.dec || 0;
+    const prefix = opts.prefix || '', suffix = opts.suffix || '';
+    const fmt = v => prefix + v.toLocaleString('ja-JP', { minimumFractionDigits: dec, maximumFractionDigits: dec }) + suffix;
+    el.textContent = fmt(target);            // 保険①：最終値を即セット（rAFが止まる環境でも0で固まらない）
+    const start = performance.now();
+    function tick(now) {
+      const t = Math.min(1, (now - start) / dur);
+      const e = 1 - Math.pow(1 - t, 3);
+      el.textContent = fmt(target * e);
+      if (t < 1) requestAnimationFrame(tick); else el.textContent = fmt(target);
+    }
+    requestAnimationFrame(tick);
+    setTimeout(() => { el.textContent = fmt(target); }, dur + 150); // 保険②：必ず最終値に着地
+  }
+
+  function renderImpact() {
+    const stats = [
+      { id:'imp-meals',   target:12480, suffix:' 食' },
+      { id:'imp-co2',     target:3.4,  dec:1, suffix:' t' },
+      { id:'imp-waste',   target:1.9,  dec:1, suffix:' t' },
+      { id:'imp-save',    target:4.9,  dec:1, prefix:'¥', suffix:'M' },
+      { id:'imp-repeat',  target:87,   suffix:' %' },
+      { id:'imp-lockers', target:28,   suffix:' 拠点' },
+      { id:'imp-users',   target:3200, suffix:' 人' },
+    ];
+    stats.forEach(s => countUp(document.getElementById(s.id), s.target, s));
+
+    const data = [820, 1180, 1640, 2380, 3120, 4150];
+    const max = Math.max(...data);
+    document.querySelectorAll('#imp-bars .bar').forEach((b, i) => {
+      b.style.height = '0%';
+      setTimeout(() => { b.style.height = (data[i] / max * 100) + '%'; }, 120 * i + 80);
+    });
+  }
+
+  /* ====================== 紙吹雪 ====================== */
+  function launchConfetti(count = 60) {
+    const box = document.getElementById('confetti');
+    const colors = ['#FF7A1A','#2FBF5B','#FFD60A','#FF4D6D','#4D9DFF','#FF9F1A'];
+    for (let i = 0; i < count; i++) {
+      const c = document.createElement('div');
+      c.className = 'confetti-piece';
+      c.style.left = Math.random()*100 + '%';
+      c.style.background = colors[i % colors.length];
+      c.style.animationDelay = (Math.random()*0.5) + 's';
+      c.style.transform = `rotate(${Math.random()*360}deg)`;
+      c.style.width = (6 + Math.random()*8) + 'px';
+      c.style.height = (8 + Math.random()*10) + 'px';
+      box.appendChild(c);
+      setTimeout(() => c.remove(), 3200);
+    }
+  }
+
+  /* ====================== ダミーQR生成（SVG） ====================== */
+  function mulberry32(a) {
+    return function() {
+      a |= 0; a = a + 0x6D2B79F5 | 0;
+      let t = Math.imul(a ^ a >>> 15, 1 | a);
+      t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+      return ((t ^ t >>> 14) >>> 0) / 4294967296;
+    };
+  }
+  function generateQR(seed) {
+    const N = 25, cell = 8, size = N*cell;
+    const rnd = mulberry32(seed || 7);
+    const grid = Array.from({length:N}, () => Array(N).fill(0));
+    function finder(r,c){
+      for(let i=0;i<7;i++)for(let j=0;j<7;j++){
+        const edge = i===0||i===6||j===0||j===6;
+        const inner = i>=2&&i<=4&&j>=2&&j<=4;
+        grid[r+i][c+j] = (edge||inner)?1:0;
+      }
+    }
+    finder(0,0); finder(0,N-7); finder(N-7,0);
+    for(let r=0;r<N;r++)for(let c=0;c<N;c++){
+      const inFinder = (r<8&&c<8)||(r<8&&c>=N-8)||(r>=N-8&&c<8);
+      if(inFinder) continue;
+      grid[r][c] = rnd() > 0.52 ? 1 : 0;
+    }
+    let rects = '';
+    for(let r=0;r<N;r++)for(let c=0;c<N;c++) if(grid[r][c]) rects += `<rect x="${c*cell}" y="${r*cell}" width="${cell}" height="${cell}"/>`;
+    return `<svg viewBox="0 0 ${size} ${size}" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges" width="100%" height="100%">
+      <rect width="${size}" height="${size}" fill="#fff"/><g fill="#231a12">${rects}</g></svg>`;
+  }
+
+  /* ====================== リセット ====================== */
+  function resetAll() {
+    state.supply = null; state.ing.clear(); state.pickup = null; state.timeslot = null; state.order = null;
+    document.querySelectorAll('#screen-1 .opt').forEach(b => setOpt(b, false));
+    const u = document.getElementById('unlockBtn'); if (u) delete u.dataset.opened;
+  }
+</script>
+</body>
+</html>

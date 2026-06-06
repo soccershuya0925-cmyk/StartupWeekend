@@ -1,0 +1,19 @@
+# OS
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Node
+node_modules/
+npm-debug.log*
+
+# Logs / temp
+*.log
+.cache/
+
+# Editor
+.vscode/
+.idea/
+
+# Claude local-only settings (team-shared launch.json stays tracked)
+.claude/settings.local.json
