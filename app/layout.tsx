@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Navigation from "@/components/Navigation";
+import Onboarding from "@/components/Onboarding";
 
 export const metadata: Metadata = {
   title: "メシ活 — 食品ロスゼロアプリ",
@@ -19,6 +20,7 @@ export default function RootLayout({
           {children}
         </div>
         <Navigation />
+        <Onboarding />
       </body>
     </html>
   );

@@ -13,6 +13,7 @@ import {
 } from "@/lib/storage";
 import { expiryStatus, statusClasses, statusLabel, sortByExpiry } from "@/lib/expiry";
 import { applyXP, XP_REWARDS } from "@/lib/xp";
+import { logEcoAction, tryAwardZeroLossWeek } from "@/lib/achievements";
 import type { FoodItem, FoodCategory } from "@/types";
 
 // カテゴリのセレクト用ラベル（型 FoodCategory に厳密に対応）
@@ -74,10 +75,20 @@ export default function FridgePage() {
   // 「使った」: 期限内に使い切れたら +100XP ボーナス（機能④の使い切りボーナス）
   function handleUse(item: FoodItem) {
     const inTime = expiryStatus(item.expiryDate) !== "expired";
-    setItems(removeFoodItem(item.id));
+    const next = removeFoodItem(item.id);
+    setItems(next);
     if (inTime) {
       saveProgress(applyXP(getProgress(), XP_REWARDS.useBeforeExpiry));
-      showToast(`期限内に使い切った！ +${XP_REWARDS.useBeforeExpiry} XP 🎉`);
+      // ロス削減アクションとして記録 → ロスゼロ週間の判定
+      logEcoAction();
+      const awarded = tryAwardZeroLossWeek(next);
+      if (awarded) {
+        showToast(
+          `🏆 ロスゼロ週間 達成！ +${XP_REWARDS.zeroLossWeek} XP の特別ボーナス！`
+        );
+      } else {
+        showToast(`期限内に使い切った！ +${XP_REWARDS.useBeforeExpiry} XP 🎉`);
+      }
     } else {
       showToast(`${item.name}を片付けました`);
     }

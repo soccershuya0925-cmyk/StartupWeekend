@@ -17,6 +17,12 @@ import { sortByExpiry, statusLabel, statusClasses, expiryStatus } from "@/lib/ex
 import { suggestRecipes, seasonFromMonth, type RecipeSuggestion } from "@/lib/recommend";
 import { recommendProducts, type ProductSuggestion } from "@/lib/products";
 import { applyXP, XP_REWARDS } from "@/lib/xp";
+import {
+  logEcoAction,
+  tryAwardZeroLossWeek,
+  getZeroLossStatus,
+  type ZeroLossStatus,
+} from "@/lib/achievements";
 import { seedDemo, clearDemo } from "@/lib/seed";
 import CharacterDisplay from "@/components/CharacterDisplay";
 import XPBar from "@/components/XPBar";
@@ -36,6 +42,7 @@ export default function HomePage() {
   const [recipes, setRecipes] = useState<RecipeSuggestion[]>([]);
   const [shopPicks, setShopPicks] = useState<ProductSuggestion[]>([]);
   const [plans, setPlans] = useState<PlannedMeal[]>([]);
+  const [zeroLoss, setZeroLoss] = useState<ZeroLossStatus | null>(null);
 
   // localStorage 読み出しは useEffect 内（ハイドレーション不整合を避ける）
   useEffect(() => {
@@ -47,6 +54,7 @@ export default function HomePage() {
     setRecipes(suggestRecipes(fridge, season, 3));
     // 折衷C: 冷蔵庫の状態に連動した ¥390 おすすめ
     setShopPicks(recommendProducts(fridge, 2));
+    setZeroLoss(getZeroLossStatus(fridge));
     loadPlans();
   }, []);
 
@@ -58,12 +66,19 @@ export default function HomePage() {
     setPlans(upcoming);
   }
 
-  // 予定どおり食べた → 食習慣ボーナス XP
+  // 予定どおり食べた → 食習慣ボーナス XP（＋ロスゼロ週間の判定）
   function handleAte(plan: PlannedMeal) {
     updatePlan(plan.id, { done: true });
-    const next = applyXP(getProgress(), XP_REWARDS.ateAsPlanned);
+    let next = applyXP(getProgress(), XP_REWARDS.ateAsPlanned);
     saveProgress(next);
+    // ロス削減アクションとして記録 → ロスゼロ週間ボーナス
+    logEcoAction();
+    const fridge = getFridge();
+    if (tryAwardZeroLossWeek(fridge)) {
+      next = getProgress(); // ボーナス反映後の進捗を取り直す
+    }
     setProgress(next);
+    setZeroLoss(getZeroLossStatus(fridge));
     loadPlans();
   }
 
@@ -81,6 +96,58 @@ export default function HomePage() {
           <XPBar totalXP={progress.totalXP} />
         </div>
       </section>
+
+      {/* ロスゼロ週間チャレンジ（機能④の特別ボーナス +500XP）*/}
+      {zeroLoss && (
+        <section className="mt-6">
+          <h2 className="text-sm font-semibold text-slate-800">
+            🌱 今週のロスゼロチャレンジ
+          </h2>
+          <div
+            className={`mt-2 rounded-2xl border p-4 ${
+              zeroLoss.alreadyAwarded
+                ? "border-brand bg-brand/10"
+                : "border-slate-200 bg-white"
+            }`}
+          >
+            {zeroLoss.alreadyAwarded ? (
+              <p className="text-sm font-semibold text-brand">
+                🏆 今週はロスゼロ達成済み！ +{XP_REWARDS.zeroLossWeek} XP 獲得済
+              </p>
+            ) : (
+              <>
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-slate-700">
+                    ロス削減アクション {zeroLoss.ecoDays}/{zeroLoss.target} 日
+                  </span>
+                  {zeroLoss.wasted > 0 ? (
+                    <span className="text-urgent">
+                      期限切れ {zeroLoss.wasted} 件
+                    </span>
+                  ) : (
+                    <span className="text-safe">期限切れ 0 件 ✓</span>
+                  )}
+                </div>
+                <div className="mt-2 h-2 w-full overflow-hidden rounded-full bg-slate-200">
+                  <div
+                    className="h-full rounded-full bg-brand transition-all"
+                    style={{
+                      width: `${Math.min(
+                        100,
+                        (zeroLoss.ecoDays / zeroLoss.target) * 100
+                      )}%`,
+                    }}
+                  />
+                </div>
+                <p className="mt-2 text-xs text-slate-500">
+                  期限切れを出さずに週{zeroLoss.target}回使い切ると +
+                  {XP_REWARDS.zeroLossWeek} XP の特別ボーナス！
+                </p>
+              </>
+            )}
+          </div>
+        </section>
+      )}
 
       {/* 期限アラート */}
       <section className="mt-6">

@@ -9,6 +9,8 @@ import {
   saveLogs,
   saveProgress,
   savePlans,
+  recordEcoAction,
+  setOnboarded,
   genId,
   resetAll,
 } from "@/lib/storage";
@@ -100,6 +102,16 @@ export function seedDemo(): void {
     progress = applyXP(progress, XP_REWARDS.cookPhoto, true);
   }
   saveProgress(progress);
+
+  // ロスゼロ週間を「あと一歩」まで進めておく（直近2日にロス削減アクション）
+  for (let d = 1; d <= 2; d++) {
+    const day = new Date();
+    day.setDate(day.getDate() - d);
+    recordEcoAction(day.toISOString());
+  }
+
+  // デモを始めた時点で「オンボーディング済み」にする（再表示ループ防止）
+  setOnboarded();
 }
 
 /** デモデータ（と全データ）をクリアする */

@@ -10,6 +10,9 @@ const KEYS = {
   logs: "meshikatsu:logs",
   progress: "meshikatsu:progress",
   plans: "meshikatsu:plans",
+  ecoActions: "meshikatsu:ecoActions", // ロス削減アクションの日付ログ
+  zeroLossAwards: "meshikatsu:zeroLossAwards", // 付与済みの「週」キー
+  onboarded: "meshikatsu:onboarded", // 初回オンボーディング完了フラグ
 } as const;
 
 const isBrowser = () => typeof window !== "undefined";
@@ -107,6 +110,31 @@ export function removePlan(id: string): PlannedMeal[] {
   const next = getPlans().filter((p) => p.id !== id);
   savePlans(next);
   return next;
+}
+
+// ---- ロス削減アクションのログ（ロスゼロ週間の判定用） ----
+export function getEcoActions(): string[] {
+  return read<string[]>(KEYS.ecoActions, []);
+}
+/** ロス削減アクション（期限内に使った／予定どおり食べた）を今日付で記録 */
+export function recordEcoAction(dateISO: string): void {
+  write(KEYS.ecoActions, [...getEcoActions(), dateISO]);
+}
+
+// ---- ロスゼロ週間ボーナスの付与済み週キー ----
+export function getZeroLossAwards(): string[] {
+  return read<string[]>(KEYS.zeroLossAwards, []);
+}
+export function addZeroLossAward(weekKey: string): void {
+  write(KEYS.zeroLossAwards, [...getZeroLossAwards(), weekKey]);
+}
+
+// ---- 初回オンボーディング ----
+export function isOnboarded(): boolean {
+  return read<boolean>(KEYS.onboarded, false);
+}
+export function setOnboarded(): void {
+  write(KEYS.onboarded, true);
 }
 
 /** デモ用：全データをリセット */
