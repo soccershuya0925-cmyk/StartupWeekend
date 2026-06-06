@@ -71,6 +71,36 @@ export const PRODUCTS: Product[] = [
     tags: ["主食", "野菜", "がっつり"],
     daysToKeep: 120,
   },
+  {
+    id: "p-don",
+    name: "牛そぼろ丼の素",
+    price: 390,
+    emoji: "🍚",
+    category: "frozen-meal",
+    description: "ごはんにのせるだけ。忙しい日のスタミナ補給に。",
+    tags: ["主食", "肉", "がっつり"],
+    daysToKeep: 90,
+  },
+  {
+    id: "p-salad",
+    name: "10品目のサラダボウル",
+    price: 390,
+    emoji: "🥗",
+    category: "side",
+    description: "野菜不足をまとめて解消。冷蔵でそのまま。",
+    tags: ["副菜", "野菜", "あと一品", "ヘルシー"],
+    daysToKeep: 5,
+  },
+  {
+    id: "p-soup-corn",
+    name: "濃厚コーンスープ2食",
+    price: 390,
+    emoji: "🌽",
+    category: "side",
+    description: "朝の一杯やあと一品に。お湯を注ぐだけ。",
+    tags: ["朝食", "あと一品"],
+    daysToKeep: 180,
+  },
 ];
 
 export interface ProductSuggestion extends Product {
