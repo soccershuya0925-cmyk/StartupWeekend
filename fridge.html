@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<meta name="theme-color" content="#FF7A1A" />
+<title>オレの冷蔵庫、まるごと管理</title>
+
+<!-- Tailwind (Play CDN) ※単体動作用。index.html へ統合時はビルド済みCSSに合わせる -->
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;500;700;800;900&display=swap" rel="stylesheet" />
+
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        fontFamily: { rounded: ['"M PLUS Rounded 1c"', 'system-ui', 'sans-serif'] },
+        colors: {
+          brand:  { orange: '#FF7A1A', deep: '#FF6300', green: '#2FBF5B', leaf: '#1F9D55' },
+          cream:  '#FFF8EF',
+          ink:    '#3A2A1B',
+        },
+        boxShadow: {
+          pop:  '0 10px 0 rgba(0,0,0,0.06)',
+          card: '0 14px 30px -12px rgba(255,122,26,0.35)',
+        },
+      },
+    },
+  };
+</script>
+
+<style>
+  html, body { -webkit-tap-highlight-color: transparent; }
+  body { font-family: '"M PLUS Rounded 1c"', "Hiragino Maru Gothic ProN", system-ui, sans-serif; }
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+  @keyframes screenIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+  .animate-in { animation: screenIn .34s cubic-bezier(.2,.8,.2,1) both; }
+  @keyframes pop { 0%{transform:scale(.8);opacity:0} 60%{transform:scale(1.06)} 100%{transform:scale(1);opacity:1} }
+  .animate-pop { animation: pop .45s cubic-bezier(.2,.9,.3,1.4) both; }
+  @keyframes floaty { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
+  .floaty { animation: floaty 3s ease-in-out infinite; }
+  @keyframes slideUp { from{transform:translateY(120%)} to{transform:translateY(0)} }
+
+  .tap { transition: transform .12s ease, box-shadow .2s ease, background-color .2s ease, border-color .2s ease; }
+  .tap:active { transform: scale(.96); }
+
+  @keyframes confettiFall { 0%{transform:translateY(-20px) rotate(0);opacity:1} 100%{transform:translateY(640px) rotate(720deg);opacity:0} }
+  .confetti-piece { position:absolute; top:0; width:10px; height:14px; border-radius:2px; will-change:transform; animation:confettiFall 2.6s linear forwards; }
+
+  @keyframes eaten { to { opacity:0; transform: translateX(40px) scale(.9); max-height:0; margin:0; padding:0; } }
+  .eaten { animation: eaten .4s ease forwards; overflow:hidden; }
+</style>
+</head>
+
+<body class="bg-gradient-to-b from-[#FFE3C2] via-[#FFEFD9] to-[#E9F8EC] min-h-screen flex items-center justify-center p-0 sm:p-5 text-ink">
+
+  <!-- ========== スマホフレーム ========== -->
+  <div class="relative w-full max-w-[430px] h-[100svh] sm:h-[880px] sm:max-h-[94vh] bg-cream sm:rounded-[40px] overflow-hidden shadow-2xl sm:ring-[10px] sm:ring-black/85 flex flex-col">
+
+    <!-- ヘッダー -->
+    <header class="shrink-0 bg-gradient-to-r from-brand-deep to-brand-orange text-white px-5 pt-5 pb-4 relative overflow-hidden">
+      <div class="absolute -right-6 -top-8 w-28 h-28 bg-white/10 rounded-full"></div>
+      <div class="absolute right-10 top-8 w-12 h-12 bg-white/10 rounded-full"></div>
+      <div class="flex items-center gap-3 relative">
+        <div class="w-11 h-11 rounded-2xl bg-white grid place-items-center text-2xl shadow-md floaty">🧊</div>
+        <div class="leading-tight">
+          <div class="text-[11px] font-bold tracking-wider text-white/80">ZERO FOOD-LOSS for 一人暮らし</div>
+          <h1 class="text-[18px] font-black tracking-tight">オレの冷蔵庫、まるごと管理</h1>
+        </div>
+      </div>
+      <!-- ひと目サマリー -->
+      <div id="headerStats" class="mt-3 grid grid-cols-3 gap-2 relative text-center"></div>
+    </header>
+
+    <!-- スクロール領域 -->
+    <main id="scroll" class="flex-1 overflow-y-auto no-scrollbar relative">
+
+      <!-- ===== タブ：冷蔵庫 ===== -->
+      <section id="tab-home" class="tabpane px-5 py-5">
+        <div class="flex items-center justify-between mb-3">
+          <h2 class="text-[20px] font-black">冷蔵庫の中身</h2>
+          <span class="text-[11px] font-bold text-ink/50">⚠️ 期限ヤバい順</span>
+        </div>
+
+        <!-- フィルタ -->
+        <div id="filters" class="flex gap-2 overflow-x-auto no-scrollbar pb-1 mb-3"></div>
+
+        <!-- 在庫リスト -->
+        <div id="fridgeList" class="space-y-2.5"></div>
+
+        <!-- 救ったサマリー -->
+        <div class="mt-6 bg-gradient-to-r from-brand-green to-brand-leaf text-white rounded-3xl p-5 text-center shadow-[0_14px_30px_-12px_rgba(47,191,91,0.6)]">
+          <p class="text-[12px] font-bold opacity-90">🌱 きみが救った食品ロス（累計）</p>
+          <p id="savedHeadline" class="text-[26px] font-black leading-tight mt-1">—</p>
+          <p class="text-[11px] font-bold opacity-90 mt-1">捨てるはずだった食材を、ちゃんと食べた量だよ。</p>
+        </div>
+      </section>
+
+      <!-- ===== タブ：追加 ===== -->
+      <section id="tab-add" class="tabpane hidden px-5 py-5">
+        <h2 class="text-[20px] font-black mb-1">食材を追加</h2>
+        <p class="text-[12px] text-ink/60 font-bold mb-4">買ったものをタップするだけ。<span class="text-brand-deep">文字入力ゼロ</span>でOK。</p>
+
+        <p class="text-[12px] font-black text-ink/50 mb-2">よく買うもの</p>
+        <div id="presetGrid" class="grid grid-cols-3 gap-2.5 mb-6"></div>
+
+        <!-- カスタム追加 -->
+        <div class="bg-white rounded-3xl p-4 shadow-sm">
+          <p class="text-[13px] font-black mb-3">✏️ 自分で追加</p>
+          <input id="customName" type="text" placeholder="例：キムチ" maxlength="12"
+            class="w-full bg-cream rounded-2xl px-4 py-3 font-bold text-[15px] outline-none focus:ring-2 focus:ring-brand-orange mb-3" />
+          <div class="flex items-center justify-between mb-3">
+            <span class="text-[13px] font-bold text-ink/70">賞味期限まで</span>
+            <div class="flex items-center gap-3">
+              <button id="dMinus" class="tap w-9 h-9 rounded-full bg-cream font-black text-xl grid place-items-center">−</button>
+              <span id="dVal" class="font-black text-[17px] w-16 text-center">5日</span>
+              <button id="dPlus" class="tap w-9 h-9 rounded-full bg-cream font-black text-xl grid place-items-center">＋</button>
+            </div>
+          </div>
+          <button id="customAdd" class="tap w-full bg-brand-green hover:bg-brand-leaf text-white font-black py-3.5 rounded-2xl shadow-sm active:translate-y-0.5">冷蔵庫に入れる</button>
+        </div>
+      </section>
+
+      <!-- ===== タブ：食べる ===== -->
+      <section id="tab-eat" class="tabpane hidden px-5 py-5">
+        <h2 class="text-[20px] font-black mb-1">今日、何食べる？</h2>
+        <p class="text-[12px] text-ink/60 font-bold mb-4">期限がヤバい食材から、<span class="text-brand-deep">¥390〜の一食</span>を提案するよ。</p>
+        <div id="eatBody"></div>
+      </section>
+
+    </main>
+
+    <!-- 紙吹雪 -->
+    <div id="confetti" class="absolute inset-0 pointer-events-none overflow-hidden z-40"></div>
+    <!-- トースト -->
+    <div id="toast" class="hidden absolute left-1/2 -translate-x-1/2 bottom-24 z-50 bg-ink text-white font-bold text-[14px] px-5 py-3 rounded-full shadow-xl" style="animation:slideUp .3s ease both"></div>
+
+    <!-- ========== ボトムナビ ========== -->
+    <nav class="shrink-0 bg-white border-t border-black/5 grid grid-cols-3 relative z-30">
+      <button data-tab="home" class="navbtn py-2.5 flex flex-col items-center gap-0.5">
+        <span class="text-[22px]">🧊</span><span class="text-[11px] font-black">冷蔵庫</span>
+      </button>
+      <button data-tab="add" class="navbtn py-2.5 flex flex-col items-center gap-0.5">
+        <span class="text-[22px]">➕</span><span class="text-[11px] font-black">追加</span>
+      </button>
+      <button data-tab="eat" class="navbtn py-2.5 flex flex-col items-center gap-0.5">
+        <span class="text-[22px]">🍽️</span><span class="text-[11px] font-black">食べる</span>
+      </button>
+    </nav>
+  </div>
+
+<script>
+/* ====================== データ定義 ====================== */
+const PRESETS = [
+  { name:'キャベツ',  emoji:'🥬', cat:'野菜',    days:6,  grams:300, yen:150 },
+  { name:'玉ねぎ',    emoji:'🧅', cat:'野菜',    days:14, grams:200, yen:80  },
+  { name:'にんじん',  emoji:'🥕', cat:'野菜',    days:10, grams:150, yen:60  },
+  { name:'もやし',    emoji:'🌱', cat:'野菜',    days:3,  grams:200, yen:30  },
+  { name:'トマト',    emoji:'🍅', cat:'野菜',    days:5,  grams:150, yen:90  },
+  { name:'豆腐',      emoji:'🧊', cat:'たんぱく', days:4,  grams:300, yen:60  },
+  { name:'納豆',      emoji:'🫘', cat:'たんぱく', days:6,  grams:150, yen:80  },
+  { name:'卵',        emoji:'🥚', cat:'たんぱく', days:14, grams:60,  yen:30  },
+  { name:'鶏むね肉',  emoji:'🍗', cat:'たんぱく', days:2,  grams:250, yen:200 },
+  { name:'ウインナー',emoji:'🌭', cat:'たんぱく', days:7,  grams:120, yen:120 },
+  { name:'牛乳',      emoji:'🥛', cat:'その他',   days:5,  grams:200, yen:50  },
+  { name:'食パン',    emoji:'🍞', cat:'主食',    days:4,  grams:60,  yen:50  },
+];
+
+const CATS = ['すべて','⚠️ヤバい','野菜','たんぱく','主食','その他'];
+
+// ¥390〜のラインナップ（既存食品を束ねる）
+const PRODUCTS = {
+  pasta: { name:'パスタソース', emoji:'🍝', price:390 },
+  bento: { name:'冷凍弁当',     emoji:'🍱', price:390 },
+  bread: { name:'パン',         emoji:'🥐', price:190 },
+};
+
+/* ====================== 状態＋永続化 ====================== */
+const STORE_KEY = 'oreno_fridge_v1';
+let state = { fridge: [], saved: { count:0, grams:0, yen:0 }, filter:'すべて', tab:'home' };
+
+function todayStart(){ const d = new Date(); d.setHours(0,0,0,0); return d; }
+function addDays(days){ const d = todayStart(); d.setDate(d.getDate()+days); return d.toISOString(); }
+function uid(){ return 'i' + Math.random().toString(36).slice(2,9); }
+
+function seed(){
+  // デモが寂しくないよう、最初だけ中身を入れておく
+  const s = [
+    {days:1,  p:'キャベツ'}, {days:2, p:'食パン'}, {days:2, p:'豆腐'},
+    {days:3,  p:'牛乳'},     {days:9, p:'卵'},     {days:12, p:'玉ねぎ'},
+  ];
+  state.fridge = s.map(x => {
+    const pre = PRESETS.find(p => p.name === x.p);
+    return { id:uid(), name:pre.name, emoji:pre.emoji, cat:pre.cat, grams:pre.grams, yen:pre.yen, qty:1, expiry:addDays(x.days) };
+  });
+  state.saved = { count:3, grams:780, yen:430 }; // 「もう救った実績」も少し見せる
+  save();
+}
+function load(){
+  try {
+    const raw = localStorage.getItem(STORE_KEY);
+    if(!raw){ seed(); return; }
+    const data = JSON.parse(raw);
+    state.fridge = data.fridge || [];
+    state.saved  = data.saved  || { count:0, grams:0, yen:0 };
+  } catch(e){ seed(); }
+}
+function save(){ localStorage.setItem(STORE_KEY, JSON.stringify({ fridge:state.fridge, saved:state.saved })); }
+
+/* ====================== 期限ユーティリティ ====================== */
+function daysLeft(item){
+  return Math.ceil((new Date(item.expiry) - todayStart()) / 86400000);
+}
+function urgency(d){
+  if (d <  0) return { key:'danger', label:'期限切れ',  badge:'bg-red-100 text-red-600 border-red-200',         dot:'bg-red-500'   };
+  if (d === 0) return { key:'danger', label:'今日まで',  badge:'bg-red-100 text-red-600 border-red-200',         dot:'bg-red-500'   };
+  if (d <= 1) return { key:'danger', label:'あと1日',   badge:'bg-red-100 text-red-600 border-red-200',         dot:'bg-red-500'   };
+  if (d <= 3) return { key:'soon',   label:`あと${d}日`, badge:'bg-orange-100 text-orange-600 border-orange-200', dot:'bg-orange-400' };
+  return         { key:'ok',     label:`あと${d}日`, badge:'bg-green-100 text-green-700 border-green-200',     dot:'bg-green-500'  };
+}
+function sortedFridge(){
+  return [...state.fridge].sort((a,b) => daysLeft(a) - daysLeft(b));
+}
+
+/* ====================== ヘッダー集計 ====================== */
+function renderHeader(){
+  const total = state.fridge.length;
+  const risky = state.fridge.filter(i => daysLeft(i) <= 3).length;
+  document.getElementById('headerStats').innerHTML = `
+    <div class="bg-white/15 rounded-2xl py-2">
+      <div class="text-[18px] font-black leading-none">${total}</div><div class="text-[10px] font-bold text-white/80 mt-0.5">品 在庫</div>
+    </div>
+    <div class="bg-white/15 rounded-2xl py-2">
+      <div class="text-[18px] font-black leading-none ${risky?'text-yellow-200':''}">${risky}</div><div class="text-[10px] font-bold text-white/80 mt-0.5">⚠️ 期限ちかい</div>
+    </div>
+    <div class="bg-white/15 rounded-2xl py-2">
+      <div class="text-[18px] font-black leading-none">${state.saved.count}</div><div class="text-[10px] font-bold text-white/80 mt-0.5">🌱 救った</div>
+    </div>`;
+}
+
+/* ====================== 冷蔵庫タブ ====================== */
+function renderFilters(){
+  document.getElementById('filters').innerHTML = CATS.map(c => {
+    const on = state.filter === c;
+    return `<button data-filter="${c}" class="tap shrink-0 px-3.5 py-1.5 rounded-full text-[12px] font-black border-2 ${on?'bg-brand-orange text-white border-brand-orange':'bg-white text-ink/60 border-transparent'}">${c}</button>`;
+  }).join('');
+}
+
+function passFilter(item){
+  const f = state.filter;
+  if (f === 'すべて') return true;
+  if (f === '⚠️ヤバい') return daysLeft(item) <= 3;
+  return item.cat === f;
+}
+
+function renderFridge(){
+  const list = document.getElementById('fridgeList');
+  const items = sortedFridge().filter(passFilter);
+
+  if (items.length === 0){
+    const empty = state.fridge.length === 0;
+    list.innerHTML = `
+      <div class="bg-white rounded-3xl p-8 text-center shadow-sm">
+        <div class="text-[52px] mb-2">${empty?'🫙':'🔍'}</div>
+        <p class="font-black text-[15px]">${empty?'冷蔵庫はからっぽ！':'この条件の食材はないよ'}</p>
+        <p class="text-[12px] text-ink/50 font-bold mt-1">${empty?'「追加」から買ったものを入れてみよう':'フィルタを変えてみてね'}</p>
+        ${empty?'<button data-jump="add" class="tap mt-4 bg-brand-orange text-white font-black px-5 py-2.5 rounded-full">＋ 食材を追加</button>':''}
+      </div>`;
+    return;
+  }
+
+  list.innerHTML = items.map(item => {
+    const d = daysLeft(item); const u = urgency(d);
+    return `
+    <div data-id="${item.id}" class="fcard bg-white rounded-2xl p-3.5 shadow-sm flex items-center gap-3 border-2 ${u.key==='danger'?'border-red-100':'border-transparent'}">
+      <div class="relative shrink-0">
+        <div class="text-[34px] leading-none">${item.emoji}</div>
+        <span class="absolute -top-1 -right-1 w-3 h-3 rounded-full ${u.dot} ring-2 ring-white"></span>
+      </div>
+      <div class="flex-1 min-w-0">
+        <p class="font-black text-[15px] leading-tight truncate">${item.name}</p>
+        <span class="inline-block mt-1 text-[11px] font-black px-2 py-0.5 rounded-full border ${u.badge}">${u.label}</span>
+        <span class="text-[11px] font-bold text-ink/40 ml-1">${item.cat}</span>
+      </div>
+      <div class="flex flex-col gap-1.5 shrink-0">
+        <button data-eat="${item.id}" class="tap bg-brand-green text-white text-[12px] font-black px-3 py-1.5 rounded-full active:translate-y-0.5">食べた</button>
+        <button data-trash="${item.id}" class="tap bg-cream text-ink/50 text-[11px] font-bold px-3 py-1 rounded-full">捨てた</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderSaved(){
+  const g  = state.saved.grams >= 1000 ? `${(state.saved.grams/1000).toFixed(1)}kg` : `${state.saved.grams}g`;
+  document.getElementById('savedHeadline').innerHTML = `${g} <span class="text-[15px]">／ ¥${state.saved.yen} お得</span>`;
+}
+
+/* 食べた／捨てた処理 */
+function consume(id, didEat){
+  const item = state.fridge.find(i => i.id === id);
+  if(!item) return;
+  const card = document.querySelector(`.fcard[data-id="${id}"]`);
+
+  if (didEat){
+    state.saved.count += 1;
+    state.saved.grams += (item.grams||100);
+    state.saved.yen   += (item.yen||80);
+  }
+  const finish = () => {
+    state.fridge = state.fridge.filter(i => i.id !== id);
+    save(); renderAll();
+    if (didEat){ toast(`🎉 ${item.name}を救った！`); burst(18); }
+    else        toast(`次は食べきろう…🥲`);
+  };
+  if (card){ card.classList.add('eaten'); setTimeout(finish, 360); } else finish();
+}
+
+/* ====================== 追加タブ ====================== */
+let customDays = 5;
+function renderPresets(){
+  document.getElementById('presetGrid').innerHTML = PRESETS.map((p,i) => `
+    <button data-preset="${i}" class="tap bg-white rounded-2xl py-3 shadow-sm flex flex-col items-center gap-1 active:translate-y-0.5">
+      <span class="text-[28px] leading-none">${p.emoji}</span>
+      <span class="text-[12px] font-black">${p.name}</span>
+      <span class="text-[10px] font-bold text-ink/40">期限${p.days}日</span>
+    </button>`).join('');
+}
+function addPreset(i){
+  const p = PRESETS[i];
+  state.fridge.push({ id:uid(), name:p.name, emoji:p.emoji, cat:p.cat, grams:p.grams, yen:p.yen, qty:1, expiry:addDays(p.days) });
+  save(); renderAll();
+  toast(`${p.emoji} ${p.name}を冷蔵庫に追加！`);
+}
+function addCustom(){
+  const name = document.getElementById('customName').value.trim();
+  if(!name){ toast('名前を入れてね✏️'); return; }
+  state.fridge.push({ id:uid(), name, emoji:'🍽️', cat:'その他', grams:120, yen:100, qty:1, expiry:addDays(customDays) });
+  document.getElementById('customName').value = '';
+  customDays = 5; document.getElementById('dVal').textContent = '5日';
+  save(); renderAll();
+  toast(`${name}を冷蔵庫に追加！`);
+}
+
+/* ====================== 食べるタブ（提案） ====================== */
+function suggestionFor(item){
+  if(!item){
+    return { product:PRODUCTS.bento, title:'冷凍弁当でサッと一食', kcal:520, min:5,
+      desc:'冷蔵庫が空でもOK。レンジで温めるだけの安心メニュー。', usesLabel:'在庫なし' };
+  }
+  const d = daysLeft(item);
+  let title, prod, kcal, min, desc;
+  if (item.cat === '主食'){
+    prod = PRODUCTS.bread; title = `${item.name}でやみつきトースト`; kcal=420; min=5;
+    desc = `${item.name}を使い切る朝の一枚。お好みトッピングで。`;
+  } else if (item.cat === 'たんぱく'){
+    prod = PRODUCTS.pasta; title = `${item.name}の旨辛ボリュームパスタ`; kcal=620; min=9;
+    desc = `たんぱく質しっかり。${item.name}を主役に、ソースを絡めるだけ。`;
+  } else {
+    prod = PRODUCTS.pasta; title = `${item.name}たっぷりシャキッとパスタ`; kcal=560; min=8;
+    desc = `余りがちな${item.name}が主役級。レンジ＆ソースで完成。`;
+  }
+  return { product:prod, title, kcal, min, desc, usesLabel:`${item.emoji} ${item.name}（${urgency(d).label}）` };
+}
+
+function renderEat(){
+  const urgent = sortedFridge()[0] || null;
+  const s = suggestionFor(urgent);
+  const others = Object.values(PRODUCTS);
+
+  document.getElementById('eatBody').innerHTML = `
+    ${urgent ? `
+    <div class="bg-red-50 border-2 border-red-100 rounded-2xl p-3 mb-3 flex items-center gap-2 animate-pop">
+      <span class="text-xl">⏰</span>
+      <p class="text-[13px] font-black text-red-600">いちばんヤバいのは「${urgent.name}」。${urgency(daysLeft(urgent)).label}！今日使お。</p>
+    </div>` : `
+    <div class="bg-green-50 border-2 border-green-100 rounded-2xl p-3 mb-3 text-center">
+      <p class="text-[13px] font-black text-brand-leaf">冷蔵庫はスッキリ✨ 今日はサクッと一食どう？</p>
+    </div>`}
+
+    <div class="bg-white rounded-3xl p-5 shadow-card border-2 border-orange-100">
+      <div class="flex gap-4 items-center">
+        <div class="text-[60px] leading-none shrink-0 floaty">${s.product.emoji}</div>
+        <div class="flex-1">
+          <div class="flex items-center gap-2 mb-1">
+            <span class="text-[10px] font-black text-white bg-brand-green px-2 py-0.5 rounded-full">${s.product.name}</span>
+            <span class="text-[10px] font-bold text-ink/50">🔥 ${s.kcal}kcal ・ ⏱ ${s.min}分</span>
+          </div>
+          <h4 class="font-black text-[16px] leading-snug">${s.title}</h4>
+          <p class="text-[12px] text-ink/60 font-medium mt-1 leading-snug">${s.desc}</p>
+        </div>
+      </div>
+      <div class="mt-3 bg-cream rounded-2xl px-3 py-2 text-[12px] font-bold text-ink/70">
+        🧊 冷蔵庫から使う：<span class="text-brand-deep">${s.usesLabel}</span>
+      </div>
+      <div class="flex items-end justify-between mt-4 pt-4 border-t-2 border-dashed border-gray-200">
+        <span class="text-[12px] font-bold text-ink/50">${s.product.name}（追加で）</span>
+        <span class="text-[24px] font-black text-brand-deep">¥${s.product.price}</span>
+      </div>
+      <button ${urgent?`data-cook="${urgent.id}"`:''} class="tap w-full mt-3 bg-brand-orange hover:bg-brand-deep text-white font-black py-3.5 rounded-2xl shadow-card active:translate-y-0.5">
+        🍽️ これを作る${urgent?'（在庫を消費）':''}
+      </button>
+    </div>
+
+    <p class="text-[12px] font-black text-ink/50 mt-6 mb-2">ほかのラインナップ</p>
+    <div class="grid grid-cols-3 gap-2.5">
+      ${others.map(p => `
+        <div class="bg-white rounded-2xl py-3 shadow-sm flex flex-col items-center gap-1">
+          <span class="text-[26px]">${p.emoji}</span>
+          <span class="text-[12px] font-black">${p.name}</span>
+          <span class="text-[13px] font-black text-brand-deep">¥${p.price}</span>
+        </div>`).join('')}
+    </div>`;
+}
+
+/* ====================== タブ切替＆描画 ====================== */
+function switchTab(tab){
+  state.tab = tab;
+  document.querySelectorAll('.tabpane').forEach(p => p.classList.add('hidden'));
+  const pane = document.getElementById('tab-'+tab);
+  pane.classList.remove('hidden');
+  pane.classList.remove('animate-in'); void pane.offsetWidth; pane.classList.add('animate-in');
+  document.getElementById('scroll').scrollTo({ top:0 });
+  document.querySelectorAll('.navbtn').forEach(b => {
+    const on = b.dataset.tab === tab;
+    b.classList.toggle('text-brand-deep', on);
+    b.classList.toggle('text-ink/40', !on);
+  });
+  if (tab === 'eat') renderEat();
+}
+
+function renderAll(){
+  renderHeader(); renderFilters(); renderFridge(); renderSaved();
+  if (state.tab === 'eat') renderEat();
+}
+
+/* ====================== トースト＆紙吹雪 ====================== */
+let toastT;
+function toast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.remove('hidden');
+  t.style.animation = 'none'; void t.offsetWidth; t.style.animation = 'slideUp .3s ease both';
+  clearTimeout(toastT); toastT = setTimeout(()=> t.classList.add('hidden'), 1800);
+}
+function burst(count=18){
+  const box = document.getElementById('confetti');
+  const colors = ['#FF7A1A','#2FBF5B','#FFD60A','#FF4D6D','#4D9DFF'];
+  for (let i=0;i<count;i++){
+    const c = document.createElement('div');
+    c.className = 'confetti-piece';
+    c.style.left = (10 + Math.random()*80) + '%';
+    c.style.background = colors[i % colors.length];
+    c.style.animationDelay = (Math.random()*0.3) + 's';
+    c.style.width = (6 + Math.random()*8) + 'px';
+    c.style.height = (8 + Math.random()*10) + 'px';
+    box.appendChild(c);
+    setTimeout(()=> c.remove(), 2800);
+  }
+}
+
+/* ====================== イベント配線 ====================== */
+document.body.addEventListener('click', (e) => {
+  const nav   = e.target.closest('[data-tab]');
+  const jump  = e.target.closest('[data-jump]');
+  const filt  = e.target.closest('[data-filter]');
+  const pre   = e.target.closest('[data-preset]');
+  const eat   = e.target.closest('[data-eat]');
+  const trash = e.target.closest('[data-trash]');
+  const cook  = e.target.closest('[data-cook]');
+
+  if (nav)   { switchTab(nav.dataset.tab); }
+  if (jump)  { switchTab(jump.dataset.jump); }
+  if (filt)  { state.filter = filt.dataset.filter; renderFilters(); renderFridge(); }
+  if (pre)   { addPreset(+pre.dataset.preset); }
+  if (eat)   { consume(eat.dataset.eat, true); }
+  if (trash) { consume(trash.dataset.trash, false); }
+  if (cook)  { consume(cook.dataset.cook, true); switchTab('home'); }
+});
+
+document.getElementById('dMinus').addEventListener('click', () => { customDays = Math.max(1, customDays-1); document.getElementById('dVal').textContent = customDays+'日'; });
+document.getElementById('dPlus').addEventListener('click',  () => { customDays = Math.min(60, customDays+1); document.getElementById('dVal').textContent = customDays+'日'; });
+document.getElementById('customAdd').addEventListener('click', addCustom);
+
+/* ====================== 起動 ====================== */
+load();
+renderPresets();
+switchTab('home');
+renderAll();
+</script>
+</body>
+</html>
