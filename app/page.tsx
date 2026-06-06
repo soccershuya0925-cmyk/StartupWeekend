@@ -58,9 +58,13 @@ export default function HomePage() {
           <h1 className="page-title">メシ活</h1>
           <p className="page-sub">今日も食品ロスゼロを目指そう！</p>
         </div>
-        <div className="text-4xl" aria-hidden>
-          🍱
-        </div>
+        <Link
+          href="/settings"
+          aria-label="設定"
+          className="rounded-full p-1.5 text-3xl transition-transform active:scale-90"
+        >
+          ⚙️
+        </Link>
       </header>
 
       {/* ヒーロー: キャラクター + XPバー + ステータス */}
@@ -92,6 +96,25 @@ export default function HomePage() {
           <Stat label="料理記録" value={`${cookCount}`} unit="回" />
           <Stat label="スタンプ" value={`${progress.stamps}`} unit="個" />
         </div>
+      </section>
+
+      {/* 今週の成果（週次サマリーへの導線） */}
+      <section className="mt-4">
+        <Link
+          href="/summary"
+          className="flex items-center gap-3 rounded-3xl border border-brand/20 bg-brand-light/50 p-4 transition-transform active:scale-[0.98]"
+        >
+          <span className="text-3xl" aria-hidden>
+            📅
+          </span>
+          <span className="min-w-0 flex-1">
+            <span className="block text-sm font-black text-ink">今週の成果を見る</span>
+            <span className="block text-xs text-ink-soft">
+              救った食材・節約額・CO₂ を週次でチェック
+            </span>
+          </span>
+          <span className="shrink-0 text-sm font-black text-brand">→</span>
+        </Link>
       </section>
 
       {/* 期限アラート */}
