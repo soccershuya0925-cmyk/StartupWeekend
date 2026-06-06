@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { drawShareCard, shareOrDownload, type ShareData } from "@/lib/share";
+import { incrementShareCount } from "@/lib/storage";
 
 interface ShareCardProps {
   data: ShareData;
@@ -29,7 +30,8 @@ export default function ShareCard({ data }: ShareCardProps) {
     setNote(null);
     try {
       const result = await shareOrDownload(data);
-      setNote(result === "shared" ? "シェアしました！" : "画像を保存しました📥");
+      incrementShareCount(); // シェアするたびに影響力スコアが上がる
+      setNote(result === "shared" ? "シェアしました！影響力UP🔥" : "画像を保存しました📥 影響力UP🔥");
     } catch {
       setNote("画像の生成に失敗しました");
     } finally {
@@ -59,8 +61,8 @@ export default function ShareCard({ data }: ShareCardProps) {
       {note && (
         <p className="mt-2 text-center text-xs font-semibold text-brand">{note}</p>
       )}
-      <p className="mt-1 text-center text-[11px] text-ink-soft">
-        対応端末ではそのままSNSへ。非対応ならPNG画像として保存されます。
+      <p className="mt-1 text-center text-xs text-ink-soft">
+        シェアするたびに影響力スコアが上がります！
       </p>
     </div>
   );

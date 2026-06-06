@@ -6,9 +6,10 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { getLossEvents, getProgress } from "@/lib/storage";
+import { getLossEvents, getProgress, getShareCount, getLogs } from "@/lib/storage";
 import { computeLossStats, type LossStats } from "@/lib/loss";
 import { stageFromLevel } from "@/lib/xp";
+import { computeInfluenceScore, titleFromScore } from "@/lib/influence";
 import ShareCard from "@/components/ShareCard";
 import type { LossEvent } from "@/types";
 import type { ShareData } from "@/lib/share";
@@ -34,6 +35,13 @@ export default function StatsPage() {
     const st = computeLossStats(ev);
     const progress = getProgress();
     const stage = stageFromLevel(progress.level);
+    const influence = computeInfluenceScore({
+      cookCount: getLogs().length,
+      shareCount: getShareCount(),
+      savedCount: st.savedCount,
+      streakDays: st.streakDays,
+    });
+    const infTitle = titleFromScore(influence.total);
     setEvents(ev);
     setStats(st);
     setShare({
@@ -43,6 +51,9 @@ export default function StatsPage() {
       savedCount: st.savedCount,
       savedYen: st.savedYen,
       streakDays: st.streakDays,
+      influenceTitle: infTitle.title,
+      influenceEmoji: infTitle.emoji,
+      influenceScore: influence.total,
     });
   }, []);
 

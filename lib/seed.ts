@@ -11,6 +11,7 @@ import {
   addLossEvent,
   setZeroLossWeeks,
   getLossEvents,
+  setShareCount,
   genId,
   resetAll,
 } from "@/lib/storage";
@@ -108,6 +109,9 @@ export function seedDemo(): void {
     progress = applyXP(progress, XP_REWARDS.cookPhoto, true);
   }
   saveProgress(progress);
+
+  // SNSシェア3回済み → 影響力スコアが「料理クリエイター」圏内になるようデモ映えさせる
+  setShareCount(3);
 }
 
 /** デモデータ（と全データ）をクリアする */

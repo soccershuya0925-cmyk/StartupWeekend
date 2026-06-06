@@ -22,6 +22,7 @@ const KEYS = {
   zeroLossWeeks: "meshikatsu:zeroLossWeeks", // 付与済みの「ロスゼロ週間」数
   orders: "meshikatsu:orders",
   myRecipes: "meshikatsu:myRecipes",
+  shareCount: "meshikatsu:shareCount", // SNSシェア回数（影響力スコアに使う）
 } as const;
 
 const isBrowser = () => typeof window !== "undefined";
@@ -149,6 +150,19 @@ export function getZeroLossWeeks(): number {
 }
 export function setZeroLossWeeks(n: number): void {
   write(KEYS.zeroLossWeeks, n);
+}
+
+// ---- SNSシェア回数（影響力スコアに使う） ----
+export function getShareCount(): number {
+  return read<number>(KEYS.shareCount, 0);
+}
+export function incrementShareCount(): number {
+  const next = getShareCount() + 1;
+  write(KEYS.shareCount, next);
+  return next;
+}
+export function setShareCount(n: number): void {
+  write(KEYS.shareCount, n);
 }
 
 /** デモ用：全データをリセット */

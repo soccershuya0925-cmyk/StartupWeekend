@@ -10,6 +10,10 @@ export interface ShareData {
   savedCount: number;
   savedYen: number;
   streakDays: number;
+  /** 影響力称号（lib/influence.ts） */
+  influenceTitle?: string;
+  influenceEmoji?: string;
+  influenceScore?: number;
 }
 
 const SIZE = 1080; // 正方形（Instagram/各SNS向け）
@@ -36,20 +40,27 @@ function roundRect(
 export function drawShareCard(ctx: CanvasRenderingContext2D, data: ShareData) {
   const cx = SIZE / 2;
 
-  // 背景グラデーション（ブランドグリーン）
+  // 背景グラデーション（称号があれば格調あるダーク調、なければブランドグリーン）
   const bg = ctx.createLinearGradient(0, 0, SIZE, SIZE);
-  bg.addColorStop(0, "#2FBF5B");
-  bg.addColorStop(1, "#1F9D55");
+  if (data.influenceTitle) {
+    bg.addColorStop(0, "#1a1a2e");
+    bg.addColorStop(0.5, "#16213e");
+    bg.addColorStop(1, "#0f3460");
+  } else {
+    bg.addColorStop(0, "#2FBF5B");
+    bg.addColorStop(1, "#1F9D55");
+  }
   ctx.fillStyle = bg;
   ctx.fillRect(0, 0, SIZE, SIZE);
 
-  // 装飾の半透明サークル
-  ctx.fillStyle = "rgba(255,255,255,0.08)";
+  // 装飾の輝きサークル
+  const glowColor = data.influenceTitle ? "rgba(245,179,1,0.1)" : "rgba(255,255,255,0.08)";
+  ctx.fillStyle = glowColor;
   ctx.beginPath();
-  ctx.arc(900, 200, 260, 0, Math.PI * 2);
+  ctx.arc(900, 200, 300, 0, Math.PI * 2);
   ctx.fill();
   ctx.beginPath();
-  ctx.arc(160, 940, 220, 0, Math.PI * 2);
+  ctx.arc(160, 940, 240, 0, Math.PI * 2);
   ctx.fill();
 
   ctx.textAlign = "center";
@@ -57,27 +68,54 @@ export function drawShareCard(ctx: CanvasRenderingContext2D, data: ShareData) {
   // ヘッダー
   ctx.fillStyle = "#F5B301";
   ctx.font = "700 34px system-ui, sans-serif";
-  ctx.fillText("M E S H I K A T S U", cx, 130);
+  ctx.fillText("M E S H I K A T S U", cx, 100);
   ctx.fillStyle = "#ffffff";
-  ctx.font = "900 72px system-ui, sans-serif";
-  ctx.fillText("メシ活", cx, 210);
+  ctx.font = "900 56px system-ui, sans-serif";
+  ctx.fillText("メシ活", cx, 168);
 
-  // キャラクター（白丸＋絵文字）
-  ctx.fillStyle = "rgba(255,255,255,0.18)";
+  // 影響力称号（あれば大きく）
+  if (data.influenceTitle && data.influenceEmoji) {
+    // 称号の台座
+    ctx.fillStyle = "rgba(245,179,1,0.15)";
+    roundRect(ctx, 80, 200, SIZE - 160, 130, 40);
+    ctx.fill();
+    ctx.strokeStyle = "rgba(245,179,1,0.5)";
+    ctx.lineWidth = 2;
+    roundRect(ctx, 80, 200, SIZE - 160, 130, 40);
+    ctx.stroke();
+
+    ctx.font = "900 80px system-ui, sans-serif";
+    ctx.fillStyle = "#ffffff";
+    ctx.fillText(data.influenceEmoji, cx, 285);
+
+    ctx.font = "900 52px system-ui, sans-serif";
+    ctx.fillStyle = "#F5B301";
+    ctx.fillText(data.influenceTitle, cx, 355);
+
+    if (data.influenceScore !== undefined) {
+      ctx.font = "700 30px system-ui, sans-serif";
+      ctx.fillStyle = "rgba(255,255,255,0.7)";
+      ctx.fillText(`影響力スコア: ${data.influenceScore}`, cx, 400);
+    }
+  }
+
+  // キャラクター絵文字
+  ctx.fillStyle = "rgba(255,255,255,0.12)";
   ctx.beginPath();
-  ctx.arc(cx, 440, 160, 0, Math.PI * 2);
+  ctx.arc(cx, data.influenceTitle ? 560 : 440, 140, 0, Math.PI * 2);
   ctx.fill();
-  ctx.font = "190px system-ui, sans-serif";
-  ctx.fillText(data.emoji, cx, 505);
+  ctx.font = "160px system-ui, sans-serif";
+  ctx.fillText(data.emoji, cx, data.influenceTitle ? 615 : 495);
 
-  // レベル・称号
-  ctx.fillStyle = "#ffffff";
-  ctx.font = "900 60px system-ui, sans-serif";
-  ctx.fillText(`Lv.${data.level} ${data.stageName}`, cx, 700);
+  // Lv + キャラ称号（小さめ）
+  ctx.fillStyle = "rgba(255,255,255,0.85)";
+  ctx.font = "700 38px system-ui, sans-serif";
+  ctx.fillText(`Lv.${data.level}  ${data.stageName}`, cx, data.influenceTitle ? 700 : 620);
 
   // 実績カード（3カラム）
-  ctx.fillStyle = "rgba(255,255,255,0.16)";
-  roundRect(ctx, 90, 760, SIZE - 180, 170, 36);
+  const cardY = data.influenceTitle ? 740 : 680;
+  ctx.fillStyle = "rgba(255,255,255,0.14)";
+  roundRect(ctx, 80, cardY, SIZE - 160, 180, 36);
   ctx.fill();
 
   const cols = [
@@ -85,30 +123,29 @@ export function drawShareCard(ctx: CanvasRenderingContext2D, data: ShareData) {
     { label: "節約できた額", value: `¥${data.savedYen.toLocaleString()}`, unit: "" },
     { label: "ロスゼロ継続", value: `${data.streakDays}`, unit: "日" },
   ];
-  const colW = (SIZE - 180) / 3;
+  const colW = (SIZE - 160) / 3;
   cols.forEach((c, i) => {
-    const x = 90 + colW * (i + 0.5);
-    ctx.fillStyle = "rgba(255,255,255,0.8)";
-    ctx.font = "600 28px system-ui, sans-serif";
-    ctx.fillText(c.label, x, 818);
+    const x = 80 + colW * (i + 0.5);
+    ctx.fillStyle = "rgba(255,255,255,0.75)";
+    ctx.font = "600 26px system-ui, sans-serif";
+    ctx.fillText(c.label, x, cardY + 55);
     ctx.fillStyle = "#ffffff";
-    ctx.font = "900 56px system-ui, sans-serif";
-    ctx.fillText(`${c.value}${c.unit}`, x, 885);
-    // 区切り線
+    ctx.font = "900 54px system-ui, sans-serif";
+    ctx.fillText(`${c.value}${c.unit}`, x, cardY + 125);
     if (i < cols.length - 1) {
-      ctx.strokeStyle = "rgba(255,255,255,0.2)";
+      ctx.strokeStyle = "rgba(255,255,255,0.18)";
       ctx.lineWidth = 2;
       ctx.beginPath();
-      ctx.moveTo(90 + colW * (i + 1), 790);
-      ctx.lineTo(90 + colW * (i + 1), 900);
+      ctx.moveTo(80 + colW * (i + 1), cardY + 30);
+      ctx.lineTo(80 + colW * (i + 1), cardY + 150);
       ctx.stroke();
     }
   });
 
   // ハッシュタグ
   ctx.fillStyle = "#F5B301";
-  ctx.font = "700 40px system-ui, sans-serif";
-  ctx.fillText("#メシ活  #食品ロスゼロ", cx, 1010);
+  ctx.font = "700 36px system-ui, sans-serif";
+  ctx.fillText("#メシ活  #食品ロスゼロ  #料理インフルエンサー", cx, 1010);
 }
 
 /** ShareData からカード画像の Blob を生成する */
