@@ -50,15 +50,19 @@ function demoFridge(): FoodItem[] {
 
 /** デモ用の料理記録サンプル */
 function demoLogs(): CookingLog[] {
-  const mk = (dishName: string, daysAgo: number): CookingLog => ({
+  const mk = (dishName: string, caption: string, daysAgo: number): CookingLog => ({
     id: genId(),
     dishName,
+    caption,
     photoUrl: "",
     xpEarned: XP_REWARDS.cookPhoto,
     cookedAt: isoDaysAgo(daysAgo),
   });
-  // 新しい順に並ぶよう、古い→新しいで作って返す
-  return [mk("肉じゃが", 4), mk("野菜炒め", 2), mk("ラタトゥイユ", 1)];
+  return [
+    mk("肉じゃが", "じゃがいもが余ってたから作った！崩れたけど味は最高", 4),
+    mk("野菜炒め", "冷蔵庫の残り野菜を全部使い切れた✨", 2),
+    mk("ラタトゥイユ", "トマトとナスで本格フレンチに挑戦", 1),
+  ];
 }
 
 /** デモ用のロス削減イベント（救った中心＋少しだけ処分でロス率が出る） */

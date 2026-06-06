@@ -9,8 +9,8 @@ import type {
   UserProgress,
   LossEvent,
   Redemption,
-  Order,
   MyRecipe,
+  PostComment,
 } from "@/types";
 
 const KEYS = {
@@ -19,10 +19,12 @@ const KEYS = {
   progress: "meshikatsu:progress",
   lossEvents: "meshikatsu:lossEvents",
   redemptions: "meshikatsu:redemptions",
-  zeroLossWeeks: "meshikatsu:zeroLossWeeks", // 付与済みの「ロスゼロ週間」数
-  orders: "meshikatsu:orders",
+  zeroLossWeeks: "meshikatsu:zeroLossWeeks",
   myRecipes: "meshikatsu:myRecipes",
-  shareCount: "meshikatsu:shareCount", // SNSシェア回数（影響力スコアに使う）
+  shareCount: "meshikatsu:shareCount",
+  postLikes: "meshikatsu:postLikes",       // string[] — いいねした投稿IDセット
+  postComments: "meshikatsu:postComments", // PostComment[] — ユーザーが追加したコメント
+  postStars: "meshikatsu:postStars",       // Record<postId, number> — ユーザーの星評価
 } as const;
 
 const isBrowser = () => typeof window !== "undefined";
@@ -92,7 +94,6 @@ const DEFAULT_PROGRESS: UserProgress = {
 };
 
 export function getProgress(): UserProgress {
-  // 既存データに無い新フィールド（redeemedStamps 等）はデフォルトで補完する
   return { ...DEFAULT_PROGRESS, ...read<Partial<UserProgress>>(KEYS.progress, {}) };
 }
 export function saveProgress(progress: UserProgress): void {
@@ -116,16 +117,6 @@ export function getRedemptions(): Redemption[] {
 export function addRedemption(r: Redemption): Redemption[] {
   const next = [r, ...getRedemptions()];
   write(KEYS.redemptions, next);
-  return next;
-}
-
-// ---- 注文履歴（Order[]・補充） ----
-export function getOrders(): Order[] {
-  return read<Order[]>(KEYS.orders, []);
-}
-export function addOrder(order: Order): Order[] {
-  const next = [order, ...getOrders()];
-  write(KEYS.orders, next);
   return next;
 }
 
@@ -163,6 +154,37 @@ export function incrementShareCount(): number {
 }
 export function setShareCount(n: number): void {
   write(KEYS.shareCount, n);
+}
+
+// ---- SNS いいね（投稿IDのセット） ----
+export function getLikedPosts(): string[] {
+  return read<string[]>(KEYS.postLikes, []);
+}
+export function toggleLike(postId: string): boolean {
+  const liked = getLikedPosts();
+  const isLiked = liked.includes(postId);
+  const next = isLiked ? liked.filter((id) => id !== postId) : [...liked, postId];
+  write(KEYS.postLikes, next);
+  return !isLiked;
+}
+
+// ---- SNS コメント ----
+export function getUserComments(): PostComment[] {
+  return read<PostComment[]>(KEYS.postComments, []);
+}
+export function addUserComment(comment: PostComment): PostComment[] {
+  const next = [...getUserComments(), comment];
+  write(KEYS.postComments, next);
+  return next;
+}
+
+// ---- SNS 星評価 ----
+export function getPostStars(): Record<string, number> {
+  return read<Record<string, number>>(KEYS.postStars, {});
+}
+export function setPostStar(postId: string, stars: number): void {
+  const curr = getPostStars();
+  write(KEYS.postStars, { ...curr, [postId]: stars });
 }
 
 /** デモ用：全データをリセット */

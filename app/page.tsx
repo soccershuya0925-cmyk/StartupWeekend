@@ -1,283 +1,327 @@
 "use client";
 
-// 担当: エンジニアA（ホーム・ダッシュボード）
-// docs/tasks/A-home-character.md の受け入れ条件に対応
-// + 旬レシピ提案（機能③）とデモデータ投入を配線
-
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
-import { getProgress, getFridge, getLogs, getLossEvents } from "@/lib/storage";
-import { sortByExpiry, statusLabel, statusClasses, expiryStatus } from "@/lib/expiry";
-import { suggestRecipes, seasonFromMonth, type RecipeSuggestion } from "@/lib/recommend";
-import { computeLossStats } from "@/lib/loss";
-import { seedDemo, clearDemo } from "@/lib/seed";
-import { isEnabled, notifyExpiring } from "@/lib/notify";
-import CharacterDisplay from "@/components/CharacterDisplay";
-import XPBar from "@/components/XPBar";
-import NotifyToggle from "@/components/NotifyToggle";
-import type { FoodItem, UserProgress } from "@/types";
+import {
+  getLogs,
+  getLikedPosts,
+  toggleLike,
+  getUserComments,
+  addUserComment,
+  getPostStars,
+  setPostStar,
+  genId,
+} from "@/lib/storage";
+import { buildFeed } from "@/lib/feed";
+import type { FeedPost, PostComment } from "@/types";
 
-// storage の DEFAULT_PROGRESS 相当（SSR と初期描画の整合用）
-const DEFAULT_PROGRESS: UserProgress = {
-  level: 1,
-  totalXP: 0,
-  stamps: 0,
-  cookingCount: 0,
-};
+function timeAgo(iso: string): string {
+  const diff = Date.now() - new Date(iso).getTime();
+  const m = Math.floor(diff / 60000);
+  if (m < 1) return "今";
+  if (m < 60) return `${m}分前`;
+  const h = Math.floor(m / 60);
+  if (h < 24) return `${h}時間前`;
+  return `${Math.floor(h / 24)}日前`;
+}
 
-export default function HomePage() {
-  const [progress, setProgress] = useState<UserProgress>(DEFAULT_PROGRESS);
-  const [fridge, setFridge] = useState<FoodItem[]>([]);
-  const [alerts, setAlerts] = useState<FoodItem[]>([]);
-  const [recipes, setRecipes] = useState<RecipeSuggestion[]>([]);
-  const [fridgeCount, setFridgeCount] = useState(0);
-  const [cookCount, setCookCount] = useState(0);
-  const [savedCount, setSavedCount] = useState(0);
-  const [savedYen, setSavedYen] = useState(0);
+function StarRow({ score }: { score: number }) {
+  return (
+    <span className="flex items-center gap-0.5 text-sm">
+      {[1, 2, 3, 4, 5].map((n) => (
+        <span
+          key={n}
+          className={score >= n ? "text-gold" : score >= n - 0.5 ? "text-gold/50" : "text-slate-200"}
+        >
+          ★
+        </span>
+      ))}
+    </span>
+  );
+}
 
-  // localStorage 読み出しは useEffect 内（ハイドレーション不整合を避ける）
+function StarPicker({
+  postId,
+  current,
+  onChange,
+}: {
+  postId: string;
+  current: number;
+  onChange: (stars: number) => void;
+}) {
+  return (
+    <div className="flex items-center gap-1">
+      <span className="text-xs text-ink-soft">評価:</span>
+      {[1, 2, 3, 4, 5].map((n) => (
+        <button
+          key={n}
+          type="button"
+          onClick={() => onChange(n)}
+          className={`text-lg transition-transform active:scale-125 ${current >= n ? "text-gold" : "text-slate-200"}`}
+          aria-label={`${n}星`}
+        >
+          ★
+        </button>
+      ))}
+    </div>
+  );
+}
+
+interface PostCardProps {
+  post: FeedPost;
+  liked: boolean;
+  userComments: PostComment[];
+  userStar: number;
+  onLike: (id: string) => void;
+  onComment: (postId: string, text: string) => void;
+  onStar: (postId: string, stars: number) => void;
+}
+
+function PostCard({
+  post,
+  liked,
+  userComments,
+  userStar,
+  onLike,
+  onComment,
+  onStar,
+}: PostCardProps) {
+  const [showComments, setShowComments] = useState(false);
+  const [commentText, setCommentText] = useState("");
+  const [likeAnim, setLikeAnim] = useState(false);
+
+  const allComments = [...post.baseComments, ...userComments].sort(
+    (a, b) => new Date(a.at).getTime() - new Date(b.at).getTime()
+  );
+
+  const totalLikes = post.baseLikes + (liked ? 1 : 0);
+  const avgStars =
+    post.baseStars > 0 && userStar > 0
+      ? (post.baseStars + userStar) / 2
+      : userStar > 0
+      ? userStar
+      : post.baseStars;
+
+  function handleLike() {
+    onLike(post.id);
+    setLikeAnim(true);
+    setTimeout(() => setLikeAnim(false), 400);
+  }
+
+  function submitComment() {
+    const text = commentText.trim();
+    if (!text) return;
+    onComment(post.id, text);
+    setCommentText("");
+  }
+
+  const isOwn = post.authorId === "me";
+
+  return (
+    <article className="overflow-hidden rounded-3xl border border-black/5 bg-white shadow-card">
+      {/* ヘッダー */}
+      <div className="flex items-center gap-3 px-4 pt-4 pb-2">
+        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-cream text-2xl">
+          {post.authorAvatar}
+        </span>
+        <div className="min-w-0 flex-1">
+          <div className="flex items-center gap-2">
+            <p className="text-sm font-black text-ink leading-none">{post.authorName}</p>
+            {isOwn && (
+              <span className="rounded-full bg-brand-light px-2 py-0.5 text-[10px] font-black text-brand">
+                自分
+              </span>
+            )}
+          </div>
+          <p className="mt-0.5 text-xs text-ink-soft">{timeAgo(post.postedAt)}</p>
+        </div>
+      </div>
+
+      {/* 料理写真 or 絵文字プレースホルダ */}
+      <div className="mx-4 overflow-hidden rounded-2xl bg-cream">
+        {post.photoUrl ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={post.photoUrl}
+            alt={post.dishName}
+            className="aspect-square w-full object-cover"
+          />
+        ) : (
+          <div className="flex aspect-square w-full items-center justify-center text-[6rem]">
+            {post.photoEmoji}
+          </div>
+        )}
+      </div>
+
+      {/* 料理名・キャプション */}
+      <div className="px-4 pt-3">
+        <p className="text-base font-black text-ink">{post.dishName}</p>
+        {post.caption && (
+          <p className="mt-1 text-sm leading-relaxed text-ink-soft">{post.caption}</p>
+        )}
+      </div>
+
+      {/* 星評価表示 */}
+      {avgStars > 0 && (
+        <div className="flex items-center gap-2 px-4 pt-2">
+          <StarRow score={avgStars} />
+          <span className="text-xs font-bold text-ink-soft">{avgStars.toFixed(1)}</span>
+        </div>
+      )}
+
+      {/* アクションバー */}
+      <div className="flex items-center gap-4 px-4 pt-3 pb-1">
+        <button
+          type="button"
+          onClick={handleLike}
+          className={`flex items-center gap-1.5 text-sm font-bold transition-colors ${
+            liked ? "text-red-500" : "text-ink-soft hover:text-red-400"
+          }`}
+        >
+          <span
+            className={`text-xl transition-transform duration-200 ${likeAnim ? "scale-150" : "scale-100"}`}
+          >
+            {liked ? "❤️" : "🤍"}
+          </span>
+          {totalLikes > 0 && <span>{totalLikes}</span>}
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setShowComments((v) => !v)}
+          className="flex items-center gap-1.5 text-sm font-bold text-ink-soft hover:text-brand transition-colors"
+        >
+          <span className="text-xl">💬</span>
+          {allComments.length > 0 && <span>{allComments.length}</span>}
+        </button>
+      </div>
+
+      {/* 星評価ピッカー */}
+      <div className="px-4 pb-3">
+        <StarPicker postId={post.id} current={userStar} onChange={(s) => onStar(post.id, s)} />
+      </div>
+
+      {/* コメントセクション（展開時） */}
+      {showComments && (
+        <div className="border-t border-black/5 bg-slate-50/60 px-4 py-3">
+          {allComments.length > 0 && (
+            <ul className="mb-3 space-y-2">
+              {allComments.map((c) => (
+                <li key={c.id} className="flex items-start gap-2">
+                  <span className="mt-0.5 shrink-0 text-lg">{c.authorAvatar}</span>
+                  <div className="min-w-0">
+                    <span className="text-xs font-black text-ink">{c.authorName} </span>
+                    <span className="text-xs text-ink-soft">{c.text}</span>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          )}
+          <div className="flex gap-2">
+            <input
+              type="text"
+              value={commentText}
+              onChange={(e) => setCommentText(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && submitComment()}
+              placeholder="コメントを追加…"
+              className="min-w-0 flex-1 rounded-xl border border-black/10 bg-white px-3 py-2 text-sm outline-none focus:border-brand"
+            />
+            <button
+              type="button"
+              onClick={submitComment}
+              disabled={!commentText.trim()}
+              className="rounded-xl bg-brand px-3 py-2 text-sm font-black text-white disabled:opacity-40"
+            >
+              送信
+            </button>
+          </div>
+        </div>
+      )}
+    </article>
+  );
+}
+
+export default function FeedPage() {
+  const [posts, setPosts] = useState<FeedPost[]>([]);
+  const [liked, setLiked] = useState<string[]>([]);
+  const [userComments, setUserComments] = useState<PostComment[]>([]);
+  const [userStars, setUserStars] = useState<Record<string, number>>({});
+
   useEffect(() => {
-    const items = getFridge();
-    setProgress(getProgress());
-    setFridge(items);
-    setFridgeCount(items.length);
-    setCookCount(getLogs().length);
-    setAlerts(sortByExpiry(items).slice(0, 3));
-    // 旬（現在の月）× 手持ち食材 でおすすめレシピを算出
-    const season = seasonFromMonth(new Date().getMonth() + 1);
-    setRecipes(suggestRecipes(items, season, 3));
-    // ロス削減実績
-    const stats = computeLossStats(getLossEvents());
-    setSavedCount(stats.savedCount);
-    setSavedYen(stats.savedYen);
-    // 通知ON時は起動時に期限アラート（内部で1日1回にスロットル）
-    if (isEnabled()) void notifyExpiring(items);
+    const logs = getLogs();
+    setPosts(buildFeed(logs));
+    setLiked(getLikedPosts());
+    setUserComments(getUserComments());
+    setUserStars(getPostStars());
+  }, []);
+
+  const handleLike = useCallback((postId: string) => {
+    const isNowLiked = toggleLike(postId);
+    setLiked((prev) =>
+      isNowLiked ? [...prev, postId] : prev.filter((id) => id !== postId)
+    );
+  }, []);
+
+  const handleComment = useCallback((postId: string, text: string) => {
+    const comment: PostComment = {
+      id: genId(),
+      postId,
+      authorName: "あなた",
+      authorAvatar: "😊",
+      text,
+      at: new Date().toISOString(),
+    };
+    const next = addUserComment(comment);
+    setUserComments(next);
+  }, []);
+
+  const handleStar = useCallback((postId: string, stars: number) => {
+    setPostStar(postId, stars);
+    setUserStars((prev) => ({ ...prev, [postId]: stars }));
   }, []);
 
   return (
     <main className="page">
-      <header className="flex items-end justify-between">
+      <header className="mb-5 flex items-center justify-between">
         <div>
-          <p className="text-xs font-bold tracking-widest text-accent">
-            MESHIKATSU
-          </p>
-          <h1 className="page-title">メシ活</h1>
-          <p className="page-sub">今日も食品ロスゼロを目指そう！</p>
+          <p className="text-xs font-bold tracking-widest text-accent">COMMUNITY</p>
+          <h1 className="page-title">🍽️ フィード</h1>
         </div>
-        <div className="text-4xl" aria-hidden>
-          🍱
-        </div>
+        <Link
+          href="/cook"
+          className="flex items-center gap-1.5 rounded-2xl bg-brand px-4 py-2.5 text-sm font-black text-white shadow-glow active:scale-95 transition-transform"
+        >
+          ＋ 投稿
+        </Link>
       </header>
 
-      {/* 救った食品カウンター（ピッチの主役） */}
-      <Link
-        href="/stats"
-        className="mt-4 flex items-center gap-3 rounded-3xl bg-gradient-to-r from-accent/15 to-accent/5 p-4 transition-transform active:scale-[0.98]"
-      >
-        <span className="text-3xl" aria-hidden>🛟</span>
-        <div className="min-w-0 flex-1">
-          <p className="text-xs font-bold text-ink-soft">これまでに救った食品</p>
-          <p className="text-2xl font-black text-ink leading-tight">
-            {savedCount}<span className="text-base font-bold">品</span>
-            <span className="ml-3 text-xl font-black text-accent">¥{savedYen.toLocaleString()}</span>
-            <span className="ml-0.5 text-sm font-bold text-accent">節約</span>
-          </p>
-        </div>
-        <span className="shrink-0 text-xs font-bold text-accent">詳細 →</span>
-      </Link>
-
-      {/* ヒーロー: キャラクター + XPバー + ステータス */}
-      <section className="mt-4 overflow-hidden rounded-4xl bg-gradient-to-br from-brand to-brand-dark p-5 text-white shadow-glow">
-        <div className="flex items-center gap-4">
-          <div className="shrink-0 rounded-3xl bg-white/15 p-2">
-            <CharacterDisplay level={progress.level} size="md" />
-          </div>
-          <div className="min-w-0 flex-1">
-            <p className="text-xs font-semibold text-white/90">現在のレベル</p>
-            <p className="text-3xl font-black leading-none">Lv.{progress.level}</p>
-            <div className="mt-3">
-              <div className="h-2.5 w-full overflow-hidden rounded-full bg-black/15">
-                <div
-                  className="h-full rounded-full bg-gold transition-all duration-700"
-                  style={{
-                    width: `${Math.max(4, (progress.totalXP % 100))}%`,
-                  }}
-                />
-              </div>
-              <p className="mt-1 text-xs font-semibold text-white/90">
-                次のレベルまで {100 - (progress.totalXP % 100)} XP
-              </p>
-            </div>
-          </div>
-        </div>
-        <div className="mt-4 grid grid-cols-3 gap-2 text-center">
-          <Stat label="冷蔵庫" value={`${fridgeCount}`} unit="品" />
-          <Stat label="料理記録" value={`${cookCount}`} unit="回" />
-          <Stat label="スタンプ" value={`${progress.stamps}`} unit="個" />
-        </div>
-      </section>
-
-      {/* 期限アラート */}
-      <section className="mt-6">
-        <h2 className="section-title">⏰ 期限が近い食材</h2>
-        {alerts.length === 0 ? (
-          <p className="card-soft text-sm text-ink-soft">
-            期限が近い食材はありません。冷蔵庫に食材を追加しましょう。
-          </p>
-        ) : (
-          <ul className="space-y-2">
-            {alerts.map((item) => {
-              const status = expiryStatus(item.expiryDate);
-              return (
-                <li
-                  key={item.id}
-                  className="flex items-center justify-between rounded-2xl border border-black/5 bg-white p-3.5 shadow-card"
-                >
-                  <span className="text-sm font-semibold text-ink">
-                    <span aria-hidden>🥬 </span>
-                    {item.name}
-                  </span>
-                  <span className={`chip ${statusClasses(status)}`}>
-                    {statusLabel(item.expiryDate)}
-                  </span>
-                </li>
-              );
-            })}
-          </ul>
-        )}
-      </section>
-
-      {/* 期限通知のオプトイン */}
-      <section className="mt-4">
-        <NotifyToggle items={fridge} />
-      </section>
-
-      {/* 旬の料理提案（機能③）＋ レシピ共有 */}
-      <section className="mt-6">
-        <h2 className="section-title">
-          🍳 旬レシピ
-          <Link href="/recipe/new" className="ml-auto text-xs font-bold text-accent">
-            ＋ 作って共有
+      {posts.length === 0 ? (
+        <div className="rounded-3xl border border-black/5 bg-white p-8 text-center shadow-card">
+          <p className="text-4xl">🍳</p>
+          <p className="mt-3 font-black text-ink">まだ投稿がありません</p>
+          <p className="mt-1 text-sm text-ink-soft">最初の料理を投稿してみよう！</p>
+          <Link href="/cook" className="btn-primary mt-4 inline-block">
+            投稿する
           </Link>
-        </h2>
-        {recipes.length > 0 ? (
-          <ul className="space-y-2">
-            {recipes.map((r) => (
-              <li
-                key={r.name}
-                className="rounded-2xl border border-brand/20 bg-brand-light/60 p-4"
-              >
-                <p className="text-sm font-black text-ink">{r.name}</p>
-                <p className="mt-0.5 text-xs text-ink-soft">{r.description}</p>
-                <p className="mt-1.5 text-xs font-bold text-brand-dark">
-                  <span aria-hidden>✓ </span>使える食材: {r.matched.join("・")}
-                </p>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p className="card-soft text-sm text-ink-soft">
-            冷蔵庫に食材を入れると、使い切れる旬レシピを提案します。
-          </p>
-        )}
-      </section>
-
-      {/* 補充の提案（折衷案）: 在庫が少ない or 期限が近いとき */}
-      {(fridgeCount < 5 || alerts.length > 0) && (
-        <section className="mt-6">
-          <Link
-            href="/shop"
-            className="flex items-center gap-3 rounded-3xl border border-accent/20 bg-accent-light/50 p-4 transition-transform active:scale-[0.98]"
-          >
-            <span className="text-3xl" aria-hidden>
-              🛒
-            </span>
-            <span className="min-w-0 flex-1">
-              <span className="block text-sm font-black text-ink">
-                在庫が少なくなっています
-              </span>
-              <span className="block text-xs text-ink-soft">
-                足りない食材を390円から補充できます
-              </span>
-            </span>
-            <span className="shrink-0 text-sm font-black text-accent">補充 →</span>
-          </Link>
-        </section>
+        </div>
+      ) : (
+        <div className="space-y-4">
+          {posts.map((post) => (
+            <PostCard
+              key={post.id}
+              post={post}
+              liked={liked.includes(post.id)}
+              userComments={userComments.filter((c) => c.postId === post.id)}
+              userStar={userStars[post.id] ?? 0}
+              onLike={handleLike}
+              onComment={handleComment}
+              onStar={handleStar}
+            />
+          ))}
+        </div>
       )}
 
-      {/* クイックアクション */}
-      <section className="mt-6">
-        <h2 className="section-title">クイックアクション</h2>
-        <div className="grid grid-cols-2 gap-3">
-          <Link
-            href="/cook"
-            className="flex flex-col items-center justify-center gap-1.5 rounded-3xl bg-accent px-4 py-6 text-white shadow-card transition-transform active:scale-95"
-          >
-            <span className="text-3xl" aria-hidden>
-              🍳
-            </span>
-            <span className="text-sm font-black">料理を記録</span>
-          </Link>
-          <Link
-            href="/receipt"
-            className="flex flex-col items-center justify-center gap-1.5 rounded-3xl border-2 border-brand bg-white px-4 py-6 text-brand transition-transform active:scale-95"
-          >
-            <span className="text-3xl" aria-hidden>
-              🧾
-            </span>
-            <span className="text-sm font-black">レシート読取</span>
-          </Link>
-        </div>
-      </section>
-
-      {/* デモ用: ワンタップでサンプル投入 / リセット（発表・動作確認用） */}
-      <section className="mt-10 border-t border-dashed border-ink/15 pt-4">
-        <p className="text-xs font-bold text-ink-soft/60">デモ用</p>
-        <div className="mt-2 flex gap-2">
-          <button
-            type="button"
-            onClick={() => {
-              seedDemo();
-              window.location.reload();
-            }}
-            className="rounded-xl border border-brand px-3 py-1.5 text-xs font-bold text-brand hover:bg-brand-light"
-          >
-            デモデータを投入
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              clearDemo();
-              window.location.reload();
-            }}
-            className="rounded-xl border border-ink/15 px-3 py-1.5 text-xs font-bold text-ink-soft hover:bg-cream"
-          >
-            全データをリセット
-          </button>
-          <button
-            type="button"
-            onClick={() =>
-              window.dispatchEvent(new Event("meshikatsu:open-onboarding"))
-            }
-            className="rounded-xl border border-ink/15 px-3 py-1.5 text-xs font-bold text-ink-soft hover:bg-cream"
-          >
-            チュートリアルを見る
-          </button>
-        </div>
-      </section>
+      <div className="h-4" />
     </main>
-  );
-}
-
-/** ヒーロー内の小さなステータス表示 */
-function Stat({ label, value, unit }: { label: string; value: string; unit: string }) {
-  return (
-    <div className="rounded-2xl bg-white/15 py-2.5">
-      <p className="text-xs font-semibold text-white/90">{label}</p>
-      <p className="text-xl font-black leading-none">
-        {value}
-        <span className="text-xs font-bold">{unit}</span>
-      </p>
-    </div>
   );
 }

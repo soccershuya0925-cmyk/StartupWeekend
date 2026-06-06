@@ -4,15 +4,13 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const TABS = [
-  { href: "/", label: "ホーム", icon: "🏠" },
+  { href: "/", label: "フィード", icon: "🏠" },
   { href: "/fridge", label: "冷蔵庫", icon: "🧊" },
-  { href: "/shop", label: "ショップ", icon: "🛒" },
-  { href: "/receipt", label: "レシート", icon: "🧾" },
-  { href: "/cook", label: "料理", icon: "🍳" },
+  { href: "/cook", label: "投稿", icon: "➕", accent: true },
+  { href: "/recipe", label: "レシピ", icon: "📖" },
   { href: "/character", label: "キャラ", icon: "⭐" },
 ];
 
-/** 下部固定ナビゲーションバー */
 export default function Navigation() {
   const pathname = usePathname();
 
@@ -24,23 +22,41 @@ export default function Navigation() {
             tab.href === "/" ? pathname === "/" : pathname.startsWith(tab.href);
           return (
             <li key={tab.href} className="flex-1">
-              <Link
-                href={tab.href}
-                aria-current={active ? "page" : undefined}
-                className={`flex flex-col items-center gap-0.5 py-2 text-xs font-bold transition-colors ${
-                  active ? "text-brand" : "text-slate-400"
-                }`}
-              >
-                <span
-                  className={`flex h-8 w-10 items-center justify-center rounded-xl text-xl transition-all ${
-                    active ? "bg-brand-light" : ""
-                  }`}
-                  aria-hidden
+              {tab.accent ? (
+                <Link
+                  href={tab.href}
+                  aria-current={active ? "page" : undefined}
+                  className="flex flex-col items-center gap-0.5 py-2 text-xs font-bold transition-colors text-brand"
                 >
-                  {tab.icon}
-                </span>
-                {tab.label}
-              </Link>
+                  <span
+                    className={`flex h-9 w-9 items-center justify-center rounded-full text-xl transition-all shadow-glow ${
+                      active ? "bg-brand text-white" : "bg-brand text-white"
+                    }`}
+                    aria-hidden
+                  >
+                    {tab.icon}
+                  </span>
+                  {tab.label}
+                </Link>
+              ) : (
+                <Link
+                  href={tab.href}
+                  aria-current={active ? "page" : undefined}
+                  className={`flex flex-col items-center gap-0.5 py-2 text-xs font-bold transition-colors ${
+                    active ? "text-brand" : "text-slate-400"
+                  }`}
+                >
+                  <span
+                    className={`flex h-8 w-10 items-center justify-center rounded-xl text-xl transition-all ${
+                      active ? "bg-brand-light" : ""
+                    }`}
+                    aria-hidden
+                  >
+                    {tab.icon}
+                  </span>
+                  {tab.label}
+                </Link>
+              )}
             </li>
           );
         })}
