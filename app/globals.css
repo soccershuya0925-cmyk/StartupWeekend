@@ -45,7 +45,7 @@ body {
     @apply rounded-3xl border border-black/5 bg-white p-5 shadow-card;
   }
   .card-soft {
-    @apply rounded-2xl border border-black/5 bg-white/70 p-4;
+    @apply block rounded-2xl border border-black/5 bg-white p-4;
   }
 
   /* ボタン */

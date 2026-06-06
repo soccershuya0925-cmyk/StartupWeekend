@@ -285,13 +285,13 @@ export default function FridgePage() {
                     {item.unit} ・ 期限 {item.expiryDate}
                   </p>
                 </div>
-                <div className="flex shrink-0 flex-col gap-1">
+                <div className="flex shrink-0 flex-col gap-1.5">
                   {status === "expired" ? (
                     <button
                       type="button"
                       onClick={() => handleDiscard(item)}
                       aria-label={`${item.name}を処分`}
-                      className="rounded-xl bg-urgent px-3 py-1 text-xs font-bold text-white hover:opacity-90"
+                      className="rounded-xl bg-urgent px-4 py-2 text-xs font-bold text-white hover:opacity-90"
                     >
                       処分
                     </button>
@@ -300,16 +300,16 @@ export default function FridgePage() {
                       type="button"
                       onClick={() => handleUse(item)}
                       aria-label={`${item.name}を使った`}
-                      className="rounded-xl bg-brand px-3 py-1 text-xs font-bold text-white hover:bg-brand-dark"
+                      className="rounded-xl bg-brand px-4 py-2 text-xs font-bold text-white hover:bg-brand-dark"
                     >
-                      使った
+                      使った✓
                     </button>
                   )}
                   <button
                     type="button"
                     onClick={() => handleRemove(item.id)}
                     aria-label={`${item.name}を削除`}
-                    className="rounded-xl border border-ink/10 px-3 py-1 text-xs font-bold text-ink-soft hover:bg-cream"
+                    className="rounded-xl border border-ink/15 px-4 py-2 text-xs font-bold text-ink-soft hover:bg-cream"
                   >
                     削除
                   </button>

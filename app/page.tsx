@@ -6,15 +6,15 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { getProgress, getFridge, getLogs } from "@/lib/storage";
+import { getProgress, getFridge, getLogs, getLossEvents } from "@/lib/storage";
 import { sortByExpiry, statusLabel, statusClasses, expiryStatus } from "@/lib/expiry";
 import { suggestRecipes, seasonFromMonth, type RecipeSuggestion } from "@/lib/recommend";
+import { computeLossStats } from "@/lib/loss";
 import { seedDemo, clearDemo } from "@/lib/seed";
 import { isEnabled, notifyExpiring } from "@/lib/notify";
 import CharacterDisplay from "@/components/CharacterDisplay";
 import XPBar from "@/components/XPBar";
 import NotifyToggle from "@/components/NotifyToggle";
-import RecipeShareButton from "@/components/RecipeShareButton";
 import type { FoodItem, UserProgress } from "@/types";
 
 // storage の DEFAULT_PROGRESS 相当（SSR と初期描画の整合用）
@@ -32,6 +32,8 @@ export default function HomePage() {
   const [recipes, setRecipes] = useState<RecipeSuggestion[]>([]);
   const [fridgeCount, setFridgeCount] = useState(0);
   const [cookCount, setCookCount] = useState(0);
+  const [savedCount, setSavedCount] = useState(0);
+  const [savedYen, setSavedYen] = useState(0);
 
   // localStorage 読み出しは useEffect 内（ハイドレーション不整合を避ける）
   useEffect(() => {
@@ -44,6 +46,10 @@ export default function HomePage() {
     // 旬（現在の月）× 手持ち食材 でおすすめレシピを算出
     const season = seasonFromMonth(new Date().getMonth() + 1);
     setRecipes(suggestRecipes(items, season, 3));
+    // ロス削減実績
+    const stats = computeLossStats(getLossEvents());
+    setSavedCount(stats.savedCount);
+    setSavedYen(stats.savedYen);
     // 通知ON時は起動時に期限アラート（内部で1日1回にスロットル）
     if (isEnabled()) void notifyExpiring(items);
   }, []);
@@ -63,14 +69,31 @@ export default function HomePage() {
         </div>
       </header>
 
+      {/* 救った食品カウンター（ピッチの主役） */}
+      <Link
+        href="/stats"
+        className="mt-4 flex items-center gap-3 rounded-3xl bg-gradient-to-r from-accent/15 to-accent/5 p-4 transition-transform active:scale-[0.98]"
+      >
+        <span className="text-3xl" aria-hidden>🛟</span>
+        <div className="min-w-0 flex-1">
+          <p className="text-xs font-bold text-ink-soft">これまでに救った食品</p>
+          <p className="text-2xl font-black text-ink leading-tight">
+            {savedCount}<span className="text-base font-bold">品</span>
+            <span className="ml-3 text-xl font-black text-accent">¥{savedYen.toLocaleString()}</span>
+            <span className="ml-0.5 text-sm font-bold text-accent">節約</span>
+          </p>
+        </div>
+        <span className="shrink-0 text-xs font-bold text-accent">詳細 →</span>
+      </Link>
+
       {/* ヒーロー: キャラクター + XPバー + ステータス */}
-      <section className="mt-5 overflow-hidden rounded-4xl bg-gradient-to-br from-brand to-brand-dark p-5 text-white shadow-glow">
+      <section className="mt-4 overflow-hidden rounded-4xl bg-gradient-to-br from-brand to-brand-dark p-5 text-white shadow-glow">
         <div className="flex items-center gap-4">
           <div className="shrink-0 rounded-3xl bg-white/15 p-2">
             <CharacterDisplay level={progress.level} size="md" />
           </div>
           <div className="min-w-0 flex-1">
-            <p className="text-xs font-semibold text-white/80">現在のレベル</p>
+            <p className="text-xs font-semibold text-white/90">現在のレベル</p>
             <p className="text-3xl font-black leading-none">Lv.{progress.level}</p>
             <div className="mt-3">
               <div className="h-2.5 w-full overflow-hidden rounded-full bg-black/15">
@@ -81,7 +104,7 @@ export default function HomePage() {
                   }}
                 />
               </div>
-              <p className="mt-1 text-[11px] font-semibold text-white/80">
+              <p className="mt-1 text-xs font-semibold text-white/90">
                 次のレベルまで {100 - (progress.totalXP % 100)} XP
               </p>
             </div>
@@ -144,18 +167,7 @@ export default function HomePage() {
                 key={r.name}
                 className="rounded-2xl border border-brand/20 bg-brand-light/60 p-4"
               >
-                <div className="flex items-start justify-between gap-2">
-                  <p className="text-sm font-black text-ink">{r.name}</p>
-                  <RecipeShareButton
-                    recipe={{
-                      name: r.name,
-                      ingredients: r.ingredients,
-                      steps: r.steps ?? [],
-                      description: r.description,
-                    }}
-                    variant="chip"
-                  />
-                </div>
+                <p className="text-sm font-black text-ink">{r.name}</p>
                 <p className="mt-0.5 text-xs text-ink-soft">{r.description}</p>
                 <p className="mt-1.5 text-xs font-bold text-brand-dark">
                   <span aria-hidden>✓ </span>使える食材: {r.matched.join("・")}
@@ -260,11 +272,11 @@ export default function HomePage() {
 /** ヒーロー内の小さなステータス表示 */
 function Stat({ label, value, unit }: { label: string; value: string; unit: string }) {
   return (
-    <div className="rounded-2xl bg-white/15 py-2">
-      <p className="text-[10px] font-semibold text-white/70">{label}</p>
-      <p className="text-lg font-black leading-none">
+    <div className="rounded-2xl bg-white/15 py-2.5">
+      <p className="text-xs font-semibold text-white/90">{label}</p>
+      <p className="text-xl font-black leading-none">
         {value}
-        <span className="text-[11px] font-bold">{unit}</span>
+        <span className="text-xs font-bold">{unit}</span>
       </p>
     </div>
   );

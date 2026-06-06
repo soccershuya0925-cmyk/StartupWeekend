@@ -110,7 +110,7 @@ export default function CharacterPage() {
                   <StageArt stage={s.stage} size={isCurrent ? 52 : 40} />
                 </div>
                 <p
-                  className={`mt-1 text-[9px] font-bold leading-tight ${
+                  className={`mt-1 text-[11px] font-bold leading-tight ${
                     isCurrent ? "text-brand" : "text-ink-soft"
                   }`}
                 >

@@ -147,7 +147,7 @@ export default function ShopPage() {
         </section>
       )}
 
-      <p className="mt-6 text-center text-[11px] text-ink-soft/70">
+      <p className="mt-6 text-center text-xs text-ink-soft">
         ※ デモのため実際の決済は行われません
       </p>
 
@@ -156,7 +156,7 @@ export default function ShopPage() {
         <div className="fixed inset-x-0 bottom-[68px] z-40 px-4">
           <div className="mx-auto flex max-w-md items-center gap-3 rounded-2xl bg-ink p-3 text-white shadow-card">
             <div className="flex-1">
-              <p className="text-[11px] font-semibold text-white/70">{totalQty}点</p>
+              <p className="text-xs font-semibold text-white/90">{totalQty}点</p>
               <p className="text-lg font-black leading-none">¥{totalYen.toLocaleString()}</p>
             </div>
             <button
@@ -206,7 +206,7 @@ function ProductRow({
         <p className="truncate text-sm font-black text-ink">
           {p.name}
           {p.tag && (
-            <span className="ml-1.5 rounded bg-brand-light px-1.5 py-0.5 text-[10px] font-bold text-brand">
+            <span className="ml-1.5 rounded bg-brand-light px-1.5 py-0.5 text-xs font-bold text-brand">
               {p.tag}
             </span>
           )}

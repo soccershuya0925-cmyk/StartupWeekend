@@ -6,9 +6,9 @@ import { usePathname } from "next/navigation";
 const TABS = [
   { href: "/", label: "ホーム", icon: "🏠" },
   { href: "/fridge", label: "冷蔵庫", icon: "🧊" },
+  { href: "/shop", label: "ショップ", icon: "🛒" },
   { href: "/receipt", label: "レシート", icon: "🧾" },
   { href: "/cook", label: "料理", icon: "🍳" },
-  { href: "/stats", label: "実績", icon: "📊" },
   { href: "/character", label: "キャラ", icon: "⭐" },
 ];
 
@@ -17,8 +17,8 @@ export default function Navigation() {
   const pathname = usePathname();
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50">
-      <ul className="mx-auto flex max-w-md items-stretch justify-between gap-1 border-t border-black/5 bg-white/90 px-2 pb-[env(safe-area-inset-bottom)] backdrop-blur-lg">
+    <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-black/10 bg-white shadow-[0_-1px_0_rgba(0,0,0,0.06)]">
+      <ul className="mx-auto flex max-w-md items-stretch justify-between px-1 pb-[env(safe-area-inset-bottom)]">
         {TABS.map((tab) => {
           const active =
             tab.href === "/" ? pathname === "/" : pathname.startsWith(tab.href);
@@ -27,13 +27,13 @@ export default function Navigation() {
               <Link
                 href={tab.href}
                 aria-current={active ? "page" : undefined}
-                className={`flex flex-col items-center gap-0.5 py-2 text-[11px] font-bold transition-all ${
-                  active ? "text-brand" : "text-ink-soft/60"
+                className={`flex flex-col items-center gap-0.5 py-2 text-xs font-bold transition-colors ${
+                  active ? "text-brand" : "text-slate-400"
                 }`}
               >
                 <span
-                  className={`flex h-8 w-12 items-center justify-center rounded-full text-lg transition-all ${
-                    active ? "-translate-y-0.5 bg-brand-light" : ""
+                  className={`flex h-8 w-10 items-center justify-center rounded-xl text-xl transition-all ${
+                    active ? "bg-brand-light" : ""
                   }`}
                   aria-hidden
                 >
