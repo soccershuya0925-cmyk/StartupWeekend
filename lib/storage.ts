@@ -22,9 +22,10 @@ const KEYS = {
   zeroLossWeeks: "meshikatsu:zeroLossWeeks",
   myRecipes: "meshikatsu:myRecipes",
   shareCount: "meshikatsu:shareCount",
-  postLikes: "meshikatsu:postLikes",       // string[] — いいねした投稿IDセット
-  postComments: "meshikatsu:postComments", // PostComment[] — ユーザーが追加したコメント
-  postStars: "meshikatsu:postStars",       // Record<postId, number> — ユーザーの星評価
+  postLikes: "meshikatsu:postLikes",
+  postComments: "meshikatsu:postComments",
+  postStars: "meshikatsu:postStars",
+  profile: "meshikatsu:profile",           // UserProfile — 名前・アバター・ひとこと
 } as const;
 
 const isBrowser = () => typeof window !== "undefined";
@@ -185,6 +186,23 @@ export function getPostStars(): Record<string, number> {
 export function setPostStar(postId: string, stars: number): void {
   const curr = getPostStars();
   write(KEYS.postStars, { ...curr, [postId]: stars });
+}
+
+// ---- ユーザープロフィール ----
+export interface UserProfile {
+  name: string;
+  avatar: string;
+  bio: string;
+}
+
+const DEFAULT_PROFILE: UserProfile = { name: "", avatar: "😊", bio: "" };
+
+export function getProfile(): UserProfile {
+  return { ...DEFAULT_PROFILE, ...read<Partial<UserProfile>>(KEYS.profile, {}) };
+}
+
+export function saveProfile(p: UserProfile): void {
+  write(KEYS.profile, p);
 }
 
 /** デモ用：全データをリセット */

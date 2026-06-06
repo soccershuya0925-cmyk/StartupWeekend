@@ -10,6 +10,7 @@ import {
   addUserComment,
   getPostStars,
   setPostStar,
+  getProfile,
   genId,
 } from "@/lib/storage";
 import { buildFeed } from "@/lib/feed";
@@ -246,13 +247,18 @@ export default function FeedPage() {
   const [liked, setLiked] = useState<string[]>([]);
   const [userComments, setUserComments] = useState<PostComment[]>([]);
   const [userStars, setUserStars] = useState<Record<string, number>>({});
+  const [myAvatar, setMyAvatar] = useState("😊");
+  const [myName, setMyName] = useState("あなた");
 
   useEffect(() => {
     const logs = getLogs();
+    const profile = getProfile();
     setPosts(buildFeed(logs));
     setLiked(getLikedPosts());
     setUserComments(getUserComments());
     setUserStars(getPostStars());
+    setMyAvatar(profile.avatar);
+    setMyName(profile.name || "あなた");
   }, []);
 
   const handleLike = useCallback((postId: string) => {
@@ -266,14 +272,14 @@ export default function FeedPage() {
     const comment: PostComment = {
       id: genId(),
       postId,
-      authorName: "あなた",
-      authorAvatar: "😊",
+      authorName: myName,
+      authorAvatar: myAvatar,
       text,
       at: new Date().toISOString(),
     };
     const next = addUserComment(comment);
     setUserComments(next);
-  }, []);
+  }, [myName, myAvatar]);
 
   const handleStar = useCallback((postId: string, stars: number) => {
     setPostStar(postId, stars);
