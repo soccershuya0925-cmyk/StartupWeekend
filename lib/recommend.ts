@@ -61,6 +61,30 @@ export const RECIPES: Recipe[] = [
     seasons: ["autumn"],
     description: "秋が旬のきのこをまとめて消費できる。",
   },
+  {
+    name: "キャベツと卵のふんわり炒め",
+    ingredients: ["キャベツ", "卵"],
+    seasons: ["spring", "summer", "autumn", "winter"],
+    description: "余りがちなキャベツと卵だけで一品。火が通れば完成。",
+  },
+  {
+    name: "ツナと玉ねぎのトマトパスタ",
+    ingredients: ["玉ねぎ", "トマト", "ツナ", "パスタ"],
+    seasons: ["spring", "summer"],
+    description: "缶詰と余り野菜でOK。失敗しにくい定番。",
+  },
+  {
+    name: "豚バラ大根の煮物",
+    ingredients: ["大根", "豚肉", "豚バラ"],
+    seasons: ["autumn", "winter"],
+    description: "大根を1本使い切れる、染みうま煮物。",
+  },
+  {
+    name: "ナスとピーマンの味噌炒め",
+    ingredients: ["ナス", "なす", "ピーマン", "豚肉"],
+    seasons: ["summer", "autumn"],
+    description: "ご飯が進む。夏野菜をまとめて消費。",
+  },
 ];
 
 export interface RecipeSuggestion extends Recipe {

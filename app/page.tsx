@@ -23,6 +23,7 @@ import {
   getZeroLossStatus,
   type ZeroLossStatus,
 } from "@/lib/achievements";
+import { getSavingsStats, type SavingsStats } from "@/lib/savings";
 import { seedDemo, clearDemo } from "@/lib/seed";
 import CharacterDisplay from "@/components/CharacterDisplay";
 import XPBar from "@/components/XPBar";
@@ -43,6 +44,7 @@ export default function HomePage() {
   const [shopPicks, setShopPicks] = useState<ProductSuggestion[]>([]);
   const [plans, setPlans] = useState<PlannedMeal[]>([]);
   const [zeroLoss, setZeroLoss] = useState<ZeroLossStatus | null>(null);
+  const [savings, setSavings] = useState<SavingsStats | null>(null);
 
   // localStorage 読み出しは useEffect 内（ハイドレーション不整合を避ける）
   useEffect(() => {
@@ -55,6 +57,7 @@ export default function HomePage() {
     // 折衷C: 冷蔵庫の状態に連動した ¥390 おすすめ
     setShopPicks(recommendProducts(fridge, 2));
     setZeroLoss(getZeroLossStatus(fridge));
+    setSavings(getSavingsStats());
     loadPlans();
   }, []);
 
@@ -79,6 +82,7 @@ export default function HomePage() {
     }
     setProgress(next);
     setZeroLoss(getZeroLossStatus(fridge));
+    setSavings(getSavingsStats());
     loadPlans();
   }
 
@@ -88,6 +92,32 @@ export default function HomePage() {
       <p className="mt-1 text-sm text-slate-500">
         今日も食品ロスゼロを目指そう！
       </p>
+
+      {/* 救った量カウンター（ピッチの主役）: 今月の成果を数値で */}
+      {savings && (
+        <section className="mt-4 rounded-2xl bg-brand p-5 text-white shadow-sm">
+          <p className="text-xs font-semibold opacity-90">
+            🛟 今月、あなたが救った食品
+          </p>
+          <div className="mt-1 flex items-end gap-4">
+            <div>
+              <span className="text-4xl font-extrabold leading-none">
+                {savings.rescuedThisMonth}
+              </span>
+              <span className="ml-1 text-sm font-semibold">品</span>
+            </div>
+            <div className="pb-0.5">
+              <span className="text-2xl font-bold leading-none">
+                ¥{savings.yenThisMonth.toLocaleString()}
+              </span>
+              <span className="ml-1 text-xs opacity-90">節約</span>
+            </div>
+          </div>
+          <p className="mt-2 text-[11px] opacity-80">
+            期限内に使い切る・予定どおり食べるたびにカウント
+          </p>
+        </section>
+      )}
 
       {/* キャラクター + XPバー */}
       <section className="mt-6 rounded-2xl border border-slate-200 bg-slate-50 p-5">

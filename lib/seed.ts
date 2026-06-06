@@ -103,12 +103,13 @@ export function seedDemo(): void {
   }
   saveProgress(progress);
 
-  // ロスゼロ週間を「あと一歩」まで進めておく（直近2日にロス削減アクション）
-  for (let d = 1; d <= 2; d++) {
+  // 救った量カウンター＆ロスゼロ週間が映えるよう、直近に複数のロス削減アクションを仕込む
+  // （今月6品＝¥900 節約相当・ロスゼロ週間はあと一歩の状態）
+  [1, 2, 4, 6, 9, 12].forEach((daysAgo) => {
     const day = new Date();
-    day.setDate(day.getDate() - d);
+    day.setDate(day.getDate() - daysAgo);
     recordEcoAction(day.toISOString());
-  }
+  });
 
   // デモを始めた時点で「オンボーディング済み」にする（再表示ループ防止）
   setOnboarded();
