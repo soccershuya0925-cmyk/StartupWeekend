@@ -235,8 +235,10 @@ export default function HomePage() {
           <button
             type="button"
             onClick={() => {
-              clearDemo();
-              window.location.reload();
+              if (window.confirm("すべてのデータを消します。よろしいですか？")) {
+                clearDemo();
+                window.location.reload();
+              }
             }}
             className="rounded-xl border border-ink/15 px-3 py-1.5 text-xs font-bold text-ink-soft hover:bg-cream"
           >

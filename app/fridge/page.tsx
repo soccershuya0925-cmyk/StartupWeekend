@@ -39,6 +39,19 @@ const CATEGORY_ICON: Record<FoodCategory, string> = Object.fromEntries(
   CATEGORY_OPTIONS.map((c) => [c.value, c.icon])
 ) as Record<FoodCategory, string>;
 
+// 消費期限のクイック設定（手入力の手間を減らす）
+const EXPIRY_PRESETS: { days: number; label: string }[] = [
+  { days: 3, label: "3日" },
+  { days: 5, label: "5日" },
+  { days: 7, label: "1週間" },
+  { days: 14, label: "2週間" },
+];
+function dateFromNow(days: number): string {
+  const d = new Date();
+  d.setDate(d.getDate() + days);
+  return d.toISOString().slice(0, 10);
+}
+
 export default function FridgePage() {
   const [items, setItems] = useState<FoodItem[]>([]);
 
@@ -61,6 +74,11 @@ export default function FridgePage() {
 
   // 期限が近い順に並べた一覧
   const sorted = sortByExpiry(items);
+  // 期限が近い/切れの品数（ひと目サマリー用）
+  const riskyCount = sorted.filter((i) => {
+    const s = expiryStatus(i.expiryDate);
+    return s === "urgent" || s === "warn" || s === "expired";
+  }).length;
 
   function handleAdd(e: React.FormEvent) {
     e.preventDefault();
@@ -85,8 +103,12 @@ export default function FridgePage() {
     setToast(`${item.name}を追加しました`);
   }
 
-  function handleRemove(id: string) {
-    setItems(removeFoodItem(id));
+  /** 削除（誤操作防止のため確認）。使った・処分の記録には残さない。 */
+  function handleRemove(item: FoodItem) {
+    if (!window.confirm(`「${item.name}」を削除しますか？（使った・処分の記録には残りません）`)) {
+      return;
+    }
+    setItems(removeFoodItem(item.id));
   }
 
   /** 期限内に使い切れたら +100XP ボーナス（機能④）＋ロス削減「救った」を記録 */
@@ -230,6 +252,19 @@ export default function FridgePage() {
               onChange={(e) => setExpiryDate(e.target.value)}
               className="field"
             />
+            {/* クイック設定：日付入力の手間を減らす */}
+            <div className="mt-2 flex flex-wrap gap-2">
+              {EXPIRY_PRESETS.map((p) => (
+                <button
+                  key={p.days}
+                  type="button"
+                  onClick={() => setExpiryDate(dateFromNow(p.days))}
+                  className="chip border-black/10 bg-white text-ink-soft transition hover:border-brand hover:text-brand"
+                >
+                  {p.label}
+                </button>
+              ))}
+            </div>
           </div>
 
           <button
@@ -250,74 +285,107 @@ export default function FridgePage() {
           </p>
           <p className="mt-2 text-sm font-semibold text-ink-soft">冷蔵庫は空です</p>
           <p className="mt-1 text-xs text-ink-soft/70">
-            「＋追加」かレシート読取で食材を入れよう
+            まずは食材を登録して、ムダをなくす第一歩を。
           </p>
-          <Link href="/shop" className="btn-ghost mt-4 inline-flex">
-            🛒 390円で補充する
-          </Link>
+          <div className="mt-4 flex flex-wrap justify-center gap-2">
+            <Link href="/receipt" className="btn-primary">
+              📷 レシートで追加
+            </Link>
+            <button
+              type="button"
+              onClick={() => setShowForm(true)}
+              className="btn-ghost"
+            >
+              ＋ 手で追加
+            </button>
+          </div>
         </div>
       ) : (
-        <ul className="mt-4 space-y-2.5">
-          {sorted.map((item) => {
-            const status = expiryStatus(item.expiryDate);
-            return (
-              <li
-                key={item.id}
-                className="flex items-center gap-3 rounded-2xl border border-black/5 bg-white p-3.5 shadow-card"
+        <>
+          {/* ひと目サマリー（中身を一目で把握） */}
+          <div className="mt-4 grid grid-cols-2 gap-2">
+            <div className="rounded-2xl border border-black/5 bg-white p-3 text-center shadow-card">
+              <p className="text-xl font-black leading-none text-ink">
+                {sorted.length}
+                <span className="text-xs font-bold"> 品</span>
+              </p>
+              <p className="mt-0.5 text-[11px] font-bold text-ink-soft">在庫</p>
+            </div>
+            <div className="rounded-2xl border border-black/5 bg-white p-3 text-center shadow-card">
+              <p
+                className={`text-xl font-black leading-none ${
+                  riskyCount > 0 ? "text-urgent" : "text-ink"
+                }`}
               >
-                <div
-                  className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-cream text-xl"
-                  aria-hidden
+                {riskyCount}
+                <span className="text-xs font-bold"> 品</span>
+              </p>
+              <p className="mt-0.5 text-[11px] font-bold text-ink-soft">⚠️ 期限ちかい</p>
+            </div>
+          </div>
+
+          <ul className="mt-3 space-y-2.5">
+            {sorted.map((item) => {
+              const status = expiryStatus(item.expiryDate);
+              return (
+                <li
+                  key={item.id}
+                  className="flex items-center gap-3 rounded-2xl border border-black/5 bg-white p-3.5 shadow-card"
                 >
-                  {CATEGORY_ICON[item.category]}
-                </div>
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-center gap-2">
-                    <span className="truncate font-black text-ink">
-                      {item.name}
-                    </span>
-                    <span className={`chip ${statusClasses(status)}`}>
-                      {statusLabel(item.expiryDate)}
-                    </span>
-                  </div>
-                  <p className="mt-0.5 text-xs text-ink-soft">
-                    {item.quantity}
-                    {item.unit} ・ 期限 {item.expiryDate}
-                  </p>
-                </div>
-                <div className="flex shrink-0 flex-col gap-1">
-                  {status === "expired" ? (
-                    <button
-                      type="button"
-                      onClick={() => handleDiscard(item)}
-                      aria-label={`${item.name}を処分`}
-                      className="rounded-xl bg-urgent px-3 py-1 text-xs font-bold text-white hover:opacity-90"
-                    >
-                      処分
-                    </button>
-                  ) : (
-                    <button
-                      type="button"
-                      onClick={() => handleUse(item)}
-                      aria-label={`${item.name}を使った`}
-                      className="rounded-xl bg-brand px-3 py-1 text-xs font-bold text-white hover:bg-brand-dark"
-                    >
-                      使った
-                    </button>
-                  )}
-                  <button
-                    type="button"
-                    onClick={() => handleRemove(item.id)}
-                    aria-label={`${item.name}を削除`}
-                    className="rounded-xl border border-ink/10 px-3 py-1 text-xs font-bold text-ink-soft hover:bg-cream"
+                  <div
+                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-cream text-xl"
+                    aria-hidden
                   >
-                    削除
-                  </button>
-                </div>
-              </li>
-            );
-          })}
-        </ul>
+                    {CATEGORY_ICON[item.category]}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-2">
+                      <span className="truncate font-black text-ink">
+                        {item.name}
+                      </span>
+                      <span className={`chip ${statusClasses(status)}`}>
+                        {statusLabel(item.expiryDate)}
+                      </span>
+                    </div>
+                    <p className="mt-0.5 text-xs text-ink-soft">
+                      {item.quantity}
+                      {item.unit} ・ 期限 {item.expiryDate}
+                    </p>
+                  </div>
+                  <div className="flex shrink-0 flex-col gap-1">
+                    {status === "expired" ? (
+                      <button
+                        type="button"
+                        onClick={() => handleDiscard(item)}
+                        aria-label={`${item.name}を処分`}
+                        className="rounded-xl bg-urgent px-3 py-1 text-xs font-bold text-white hover:opacity-90"
+                      >
+                        処分
+                      </button>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => handleUse(item)}
+                        aria-label={`${item.name}を使った`}
+                        className="rounded-xl bg-brand px-3 py-1 text-xs font-bold text-white hover:bg-brand-dark"
+                      >
+                        使った
+                      </button>
+                    )}
+                    <button
+                      type="button"
+                      onClick={() => handleRemove(item)}
+                      aria-label={`${item.name}を削除`}
+                      className="rounded-xl border border-ink/10 px-3 py-1 text-xs font-bold text-ink-soft hover:bg-cream"
+                    >
+                      削除
+                    </button>
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+        </>
       )}
     </main>
   );

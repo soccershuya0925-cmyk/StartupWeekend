@@ -5,6 +5,7 @@
 // 画像選択 → POST /api/receipt で AI 解析 → 期限を入力して冷蔵庫に追加 + XP。
 
 import { useRef, useState } from "react";
+import Link from "next/link";
 import { addFoodItem, getProgress, saveProgress, genId } from "@/lib/storage";
 import { applyXP, XP_REWARDS, stageFromLevel } from "@/lib/xp";
 import LevelUpCelebration from "@/components/LevelUpCelebration";
@@ -178,8 +179,13 @@ export default function ReceiptPage() {
       {/* 追加完了メッセージ */}
       {addedCount !== null && (
         <div className="mt-4 animate-pop-in rounded-2xl border border-brand/20 bg-brand-light p-4 text-sm font-bold text-brand-dark">
-          {addedCount} 件の食材を冷蔵庫に追加しました（+
-          {XP_REWARDS.receipt * addedCount} XP）🎉
+          <p>
+            {addedCount} 件の食材を冷蔵庫に追加しました（+
+            {XP_REWARDS.receipt * addedCount} XP）🎉
+          </p>
+          <Link href="/fridge" className="btn-primary mt-3 w-full">
+            🧊 冷蔵庫を見る
+          </Link>
         </div>
       )}
 
