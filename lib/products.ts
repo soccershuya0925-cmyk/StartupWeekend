@@ -62,10 +62,39 @@ export const PRODUCTS: Product[] = [
     tags: ["主食", "野菜", "がっつり"],
     daysToKeep: 120,
   },
+  // ── Lv10 解放 ──
+  {
+    id: "p-sushi-chirashi",
+    name: "海鮮ちらし寿司セット",
+    price: 390,
+    emoji: "🍣",
+    category: "frozen-meal",
+    description: "Lv10限定！まぐろ・サーモン・いくら入り。解凍だけで本格派。",
+    tags: ["主食", "魚", "ご褒美"],
+    daysToKeep: 60,
+    minLevel: 10,
+  },
+  // ── Lv20 解放 ──
+  {
+    id: "p-wagyu-sukiyaki",
+    name: "黒毛和牛すき焼きセット",
+    price: 390,
+    emoji: "🥩",
+    category: "frozen-meal",
+    description: "Lv20限定！和牛使用。特製割り下つき。週末のご褒美に。",
+    tags: ["主食", "肉", "ご褒美"],
+    daysToKeep: 90,
+    minLevel: 20,
+  },
 ];
 
 export interface ProductSuggestion extends Product {
   reason: string;
+}
+
+/** ユーザーレベルで購入可能な商品だけを返す */
+export function filterProductsByLevel(level: number): Product[] {
+  return PRODUCTS.filter((p) => !p.minLevel || level >= p.minLevel);
 }
 
 export function recommendProducts(fridge: FoodItem[], limit = 2): ProductSuggestion[] {

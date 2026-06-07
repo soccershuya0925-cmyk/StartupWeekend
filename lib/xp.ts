@@ -18,10 +18,42 @@ export const XP_REWARDS = {
   ateAsPlanned: 80, // 折衷C: 予定どおり食べた（食習慣ボーナス）
 } as const;
 
-/** スタンプ：料理 N 回ごとに 1 個 */
+/** スタンプ：料理 N 回ごとに 1 個（基本値・レベル非依存の参照用） */
 export const COOK_PER_STAMP = 5;
 /** 特典交換に必要なスタンプ数 */
 export const STAMPS_PER_REWARD = 10;
+
+/** レベルに応じたスタンプ獲得間隔（低いほど貯まりやすい） */
+export function cookPerStamp(level: number): number {
+  if (level >= 20) return 2;
+  if (level >= 10) return 3;
+  if (level >= 5)  return 4;
+  return 5;
+}
+
+/** レベルに応じたショップ割引額（円） */
+export function shopDiscount(level: number): number {
+  if (level >= 30) return 60;
+  if (level >= 20) return 40;
+  if (level >= 10) return 20;
+  return 0;
+}
+
+/** レベルアップ特典テーブル */
+export interface LevelPerk {
+  minLevel: number;
+  emoji: string;
+  label: string;
+  detail: string;
+}
+
+export const LEVEL_PERKS: LevelPerk[] = [
+  { minLevel: 1,  emoji: "🎟️", label: "スタンプ: 料理5回→1枚",          detail: "基本ペース" },
+  { minLevel: 5,  emoji: "⚡",  label: "スタンプ: 料理4回→1枚",          detail: "少し貯まりやすくなる" },
+  { minLevel: 10, emoji: "🛒",  label: "スタンプ: 料理3回→1枚 ＋ 限定商品解放 ＋ ¥20割引", detail: "ショップに新商品が登場" },
+  { minLevel: 20, emoji: "💰",  label: "スタンプ: 料理2回→1枚 ＋ ¥40割引", detail: "¥390→¥350" },
+  { minLevel: 30, emoji: "👑",  label: "スタンプ: 料理2回→1枚 ＋ ¥60割引", detail: "最大割引！¥390→¥330" },
+];
 
 /** キャラクター成長段階（事業計画書 §3 機能④） */
 export const STAGES: CharacterStage[] = [
@@ -88,10 +120,11 @@ export function applyXP(
   const cookingCount = incrementCooking
     ? progress.cookingCount + 1
     : progress.cookingCount;
+  const level = levelFromXP(totalXP);
   return {
     totalXP,
-    level: levelFromXP(totalXP),
+    level,
     cookingCount,
-    stamps: Math.floor(cookingCount / COOK_PER_STAMP),
+    stamps: Math.floor(cookingCount / cookPerStamp(level)),
   };
 }

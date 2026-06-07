@@ -4,7 +4,8 @@ import { useEffect, useMemo, useState } from "react";
 import { getProgress, getRedemptions, getFridge, saveProgress, addRedemption, genId } from "@/lib/storage";
 import { REWARDS, genCouponCode } from "@/lib/loss";
 import { availableStamps, redeemStamps } from "@/lib/xp";
-import { PRODUCTS, recommendProducts } from "@/lib/products";
+import { PRODUCTS, recommendProducts, filterProductsByLevel } from "@/lib/products";
+import { shopDiscount } from "@/lib/xp";
 import OrderFlow from "@/components/OrderFlow";
 import type { UserProgress, Reward, Redemption, Product, FoodItem } from "@/types";
 
@@ -28,7 +29,9 @@ export default function ShopPage() {
   }, []);
 
   const available = availableStamps(progress);
-  const recommended = useMemo(() => recommendProducts(fridge, 2), [fridge]);
+  const discount = shopDiscount(progress.level);
+  const unlockedProducts = useMemo(() => filterProductsByLevel(progress.level), [progress.level]);
+  const recommended = useMemo(() => recommendProducts(fridge, 2).filter((p) => !p.minLevel || progress.level >= p.minLevel), [fridge, progress.level]);
   const recommendedIds = new Set(recommended.map((p) => p.id));
 
   function handleRedeem(reward: Reward) {
@@ -94,25 +97,57 @@ export default function ShopPage() {
       {/* ¥390 補充ショップタブ */}
       {tab === "shop" && (
         <div className="space-y-3">
+          {/* ランク割引バナー */}
+          {discount > 0 && (
+            <div className="flex items-center gap-2.5 rounded-2xl bg-gradient-to-r from-accent/15 to-accent/5 border border-accent/30 px-4 py-2.5">
+              <span className="text-xl">👑</span>
+              <div>
+                <p className="text-sm font-black text-accent">ランク特典：全商品 ¥{discount} 割引中！</p>
+                <p className="text-[11px] text-ink-soft">Lv.{progress.level} の特権です</p>
+              </div>
+            </div>
+          )}
+
           {/* おすすめ（冷蔵庫連動） */}
           {recommended.length > 0 && (
             <>
               <p className="section-title">✨ あなたへのおすすめ</p>
               <div className="rounded-3xl border border-brand/20 bg-brand-light/60 p-3 space-y-2">
                 {recommended.map((p) => (
-                  <ProductRow key={p.id} product={p} highlight onOrder={() => setOrdering(p)} />
+                  <ProductRow key={p.id} product={p} highlight discount={discount} onOrder={() => setOrdering(p)} />
                 ))}
               </div>
             </>
           )}
 
-          {/* 全商品 */}
+          {/* 解放済み商品 */}
           <p className="section-title">🍱 商品一覧</p>
           <div className="space-y-2">
-            {PRODUCTS.filter((p) => !recommendedIds.has(p.id)).map((p) => (
-              <ProductRow key={p.id} product={p} onOrder={() => setOrdering(p)} />
+            {unlockedProducts.filter((p) => !recommendedIds.has(p.id)).map((p) => (
+              <ProductRow key={p.id} product={p} discount={discount} onOrder={() => setOrdering(p)} />
             ))}
           </div>
+
+          {/* 未解放商品（ロック表示） */}
+          {PRODUCTS.filter((p) => p.minLevel && p.minLevel > progress.level).length > 0 && (
+            <>
+              <p className="section-title mt-2">🔒 レベルアップで解放</p>
+              <div className="space-y-2">
+                {PRODUCTS.filter((p) => p.minLevel && p.minLevel > progress.level).map((p) => (
+                  <div key={p.id} className="flex items-center gap-3 rounded-2xl border-2 border-dashed border-black/10 bg-black/3 p-3 opacity-60">
+                    <span className="text-3xl grayscale">{p.emoji}</span>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-black text-ink-soft">{p.name}</p>
+                      <p className="mt-0.5 text-xs text-ink-soft/70 line-clamp-1">{p.description}</p>
+                    </div>
+                    <div className="shrink-0 rounded-2xl bg-black/8 px-3 py-2 text-xs font-black text-ink-soft">
+                      Lv.{p.minLevel}〜
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
 
           <div className="card-glass text-center py-3 mt-2">
             <p className="text-xs text-ink-soft">※ デモのため実際の決済は行われません</p>
@@ -204,6 +239,7 @@ export default function ShopPage() {
       {ordering && (
         <OrderFlow
           product={ordering}
+          discount={discount}
           onClose={() => setOrdering(null)}
           onPlaced={({ xp }) => showToast(`注文完了（デモ）・予定に追加 ＋${xp} XP 🎉`)}
         />
@@ -221,7 +257,13 @@ export default function ShopPage() {
   );
 }
 
-function ProductRow({ product, highlight, onOrder }: { product: Product; highlight?: boolean; onOrder: () => void }) {
+function ProductRow({ product, highlight, discount = 0, onOrder }: {
+  product: Product;
+  highlight?: boolean;
+  discount?: number;
+  onOrder: () => void;
+}) {
+  const finalPrice = Math.max(0, product.price - discount);
   return (
     <div className={`flex items-center gap-3 rounded-2xl p-3 ${highlight ? "bg-white" : "card"}`}>
       <span className="text-3xl">{product.emoji}</span>
@@ -234,7 +276,14 @@ function ProductRow({ product, highlight, onOrder }: { product: Product; highlig
         onClick={onOrder}
         className="shrink-0 rounded-2xl bg-gradient-to-br from-accent to-accent-dark px-3 py-2 text-sm font-black text-white shadow-glow-accent active:scale-95 transition-all"
       >
-        ¥{product.price}
+        {discount > 0 ? (
+          <span className="flex flex-col items-end leading-tight">
+            <span className="text-[10px] line-through opacity-70">¥{product.price}</span>
+            <span>¥{finalPrice}</span>
+          </span>
+        ) : (
+          `¥${product.price}`
+        )}
       </button>
     </div>
   );

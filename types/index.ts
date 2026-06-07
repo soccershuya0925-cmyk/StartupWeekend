@@ -85,6 +85,8 @@ export interface Product {
   description: string;
   tags: string[];
   daysToKeep: number;
+  /** このレベル以上で購入可能（省略時は全レベル解放） */
+  minLevel?: number;
 }
 
 export interface PlannedMeal {

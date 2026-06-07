@@ -92,9 +92,11 @@ interface Props {
   product: Product;
   onClose: () => void;
   onPlaced?: (info: { total: number; xp: number }) => void;
+  /** ランク割引額（円）。0 なら表示なし */
+  discount?: number;
 }
 
-export default function OrderFlow({ product, onClose, onPlaced }: Props) {
+export default function OrderFlow({ product, onClose, onPlaced, discount = 0 }: Props) {
   const [step, setStep] = useState<Step>("eat");
   const [eatDate, setEatDate] = useState(dateAfter(1));
   const [pickupId, setPickupId] = useState<string | null>(null);
@@ -104,7 +106,7 @@ export default function OrderFlow({ product, onClose, onPlaced }: Props) {
 
   const pickup = PICKUPS.find((p) => p.id === pickupId) ?? null;
   const slot = TIMESLOTS.find((s) => s.id === slotId) ?? null;
-  const total = product.price + (pickup?.extra ?? 0);
+  const total = Math.max(0, product.price - discount) + (pickup?.extra ?? 0);
 
   function place() {
     if (!pickup || !slot) return;
@@ -128,8 +130,13 @@ export default function OrderFlow({ product, onClose, onPlaced }: Props) {
           <div className="min-w-0 flex-1">
             <p className="truncate font-black text-ink">{product.name}</p>
             <p className="text-sm font-bold text-brand">
+              {discount > 0 && (
+                <span className="mr-1.5 inline-flex items-center gap-0.5 rounded-full bg-accent/15 px-2 py-0.5 text-[11px] font-black text-accent">
+                  👑 ¥{discount}割引
+                </span>
+              )}
               ¥{total}
-              {pickup?.extra ? `（¥${product.price}＋配達¥${pickup.extra}）` : "（都度払い）"}
+              {pickup?.extra ? `（¥${Math.max(0, product.price - discount)}＋配達¥${pickup.extra}）` : "（都度払い）"}
             </p>
           </div>
           <span className="rounded-full bg-cream px-2.5 py-0.5 text-[11px] font-black text-ink-soft">

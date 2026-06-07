@@ -19,6 +19,9 @@ import {
   stageFromLevel,
   availableStamps,
   redeemStamps,
+  LEVEL_PERKS,
+  cookPerStamp,
+  shopDiscount,
 } from "@/lib/xp";
 import { REWARDS, genCouponCode, computeLossStats } from "@/lib/loss";
 import { computeInfluenceScore, titleFromScore, nextTitle } from "@/lib/influence";
@@ -126,6 +129,55 @@ export default function CharacterPage() {
                 >
                   Lv.{s.minLevel}
                 </p>
+              </div>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* レベルアップ特典 */}
+      <section className="mt-6">
+        <h2 className="section-title">🎁 レベルアップ特典</h2>
+        <div className="overflow-hidden rounded-3xl border border-black/5 bg-white shadow-card">
+          {LEVEL_PERKS.map((perk, i) => {
+            const unlocked = progress.level >= perk.minLevel;
+            const isCurrent =
+              i === LEVEL_PERKS.length - 1
+                ? progress.level >= perk.minLevel
+                : progress.level >= perk.minLevel && progress.level < LEVEL_PERKS[i + 1].minLevel;
+            return (
+              <div
+                key={perk.minLevel}
+                className={`flex items-center gap-3 px-4 py-3.5 transition-opacity ${
+                  i > 0 ? "border-t border-black/5" : ""
+                } ${unlocked ? "" : "opacity-40"}`}
+              >
+                <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl text-xl ${
+                  isCurrent ? "bg-brand-light" : unlocked ? "bg-cream" : "bg-black/5"
+                }`}>
+                  {perk.emoji}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-1.5 flex-wrap">
+                    <span className="text-xs font-black text-ink-soft">Lv.{perk.minLevel}</span>
+                    {isCurrent && (
+                      <span className="rounded-full bg-brand px-2 py-0.5 text-[10px] font-black text-white">現在</span>
+                    )}
+                    {!unlocked && (
+                      <span className="rounded-full bg-black/8 px-2 py-0.5 text-[10px] font-black text-ink-soft">🔒 未解放</span>
+                    )}
+                  </div>
+                  <p className="mt-0.5 text-sm font-black text-ink leading-tight">{perk.label}</p>
+                  <p className="mt-0.5 text-xs text-ink-soft">{perk.detail}</p>
+                </div>
+                {unlocked && (
+                  <div className="shrink-0 text-right text-xs font-black text-brand">
+                    {shopDiscount(perk.minLevel) > 0 && (
+                      <p>¥{shopDiscount(perk.minLevel)}割引</p>
+                    )}
+                    <p className="text-ink-soft font-semibold">{cookPerStamp(perk.minLevel)}回→1枚</p>
+                  </div>
+                )}
               </div>
             );
           })}
