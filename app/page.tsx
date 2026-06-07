@@ -15,6 +15,7 @@ import CharacterDisplay from "@/components/CharacterDisplay";
 import XPBar from "@/components/XPBar";
 import NotifyToggle from "@/components/NotifyToggle";
 import RecipeShareButton from "@/components/RecipeShareButton";
+import SocialFeed from "@/components/SocialFeed";
 import type { FoodItem, UserProgress } from "@/types";
 
 // storage の DEFAULT_PROGRESS 相当（SSR と初期描画の整合用）
@@ -93,6 +94,9 @@ export default function HomePage() {
           <Stat label="スタンプ" value={`${progress.stamps}`} unit="個" />
         </div>
       </section>
+
+      {/* みんなの投稿フィード（他ユーザーの投稿が流れてくる） */}
+      <SocialFeed />
 
       {/* 期限アラート */}
       <section className="mt-6">
