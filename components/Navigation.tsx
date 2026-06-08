@@ -3,14 +3,14 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
+// 料理意欲SNSの主役導線（フィード/投稿/レシピ）を前面に。
 const TABS = [
-  { href: "/", label: "ホーム", icon: "🏠" },
   { href: "/feed", label: "フィード", icon: "👥" },
+  { href: "/cook", label: "投稿", icon: "📷" },
+  { href: "/recipe", label: "レシピ", icon: "📖" },
   { href: "/fridge", label: "冷蔵庫", icon: "🧊" },
-  { href: "/receipt", label: "レシート", icon: "🧾" },
-  { href: "/cook", label: "料理", icon: "🍳" },
-  { href: "/stats", label: "実績", icon: "📊" },
   { href: "/character", label: "キャラ", icon: "⭐" },
+  { href: "/", label: "マイページ", icon: "👤" },
 ];
 
 /** 下部固定ナビゲーションバー */

@@ -108,7 +108,7 @@ export const REWARDS: Reward[] = [
   { id: "drink", name: "ドリンク1杯無料", cost: 2, partner: "学生街カフェ", emoji: "☕" },
   { id: "veggie", name: "野菜100円引き", cost: 3, partner: "最寄りスーパー", emoji: "🥬" },
   { id: "rice", name: "ごはん大盛り無料", cost: 5, partner: "定食屋ますや", emoji: "🍚" },
-  { id: "frozen", name: "冷凍弁当1食プレゼント", cost: 8, partner: "メシ活提携便", emoji: "🍱" },
+  { id: "sweets", name: "スイーツセット無料", cost: 8, partner: "提携カフェ", emoji: "🍰" },
 ];
 
 /** クーポンコードを生成（提携店で提示する想定の擬似コード） */

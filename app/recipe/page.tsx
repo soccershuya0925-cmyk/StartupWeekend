@@ -82,16 +82,17 @@ export default function RecipeViewerPage() {
           })}
         </div>
         {missing.length > 0 && (
-          <Link
-            href="/shop"
-            className="mt-3 flex items-center gap-2 rounded-2xl border border-accent/20 bg-accent-light/50 p-3 text-sm font-bold text-ink"
-          >
-            <span aria-hidden>🛒</span>
-            <span className="flex-1">
-              足りない材料（{missing.length}）を390円で補充
-            </span>
-            <span className="text-accent">→</span>
-          </Link>
+          <div className="mt-3 rounded-2xl border border-ink/10 bg-cream p-3">
+            <p className="text-xs font-bold text-ink-soft">
+              <span aria-hidden>🛍 </span>買い物メモ（{missing.length}）
+            </p>
+            <p className="mt-1 text-sm font-bold text-ink">
+              {missing.join("・")}
+            </p>
+            <p className="mt-1 text-[11px] text-ink-soft/70">
+              次の買い物で追加しよう
+            </p>
+          </div>
         )}
       </section>
 

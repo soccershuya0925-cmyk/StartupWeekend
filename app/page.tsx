@@ -56,7 +56,7 @@ export default function HomePage() {
             MESHIKATSU
           </p>
           <h1 className="page-title">メシ活</h1>
-          <p className="page-sub">今日も食品ロスゼロを目指そう！</p>
+          <p className="page-sub">ひとりの自炊を、みんなで続ける。</p>
         </div>
         <div className="text-4xl" aria-hidden>
           🍱
@@ -92,6 +92,19 @@ export default function HomePage() {
           <Stat label="料理記録" value={`${cookCount}`} unit="回" />
           <Stat label="スタンプ" value={`${progress.stamps}`} unit="個" />
         </div>
+      </section>
+
+      {/* 実績・ロス削減ダッシュボードへ */}
+      <section className="mt-3">
+        <Link
+          href="/stats"
+          className="flex items-center justify-between rounded-2xl border border-black/5 bg-white p-3.5 text-sm font-bold text-ink shadow-card"
+        >
+          <span>
+            <span aria-hidden>📊 </span>実績・ロス削減をくわしく見る
+          </span>
+          <span className="text-accent">→</span>
+        </Link>
       </section>
 
       {/* 期限アラート */}
@@ -170,28 +183,26 @@ export default function HomePage() {
         )}
       </section>
 
-      {/* 補充の提案（折衷案）: 在庫が少ない or 期限が近いとき */}
-      {(fridgeCount < 5 || alerts.length > 0) && (
-        <section className="mt-6">
-          <Link
-            href="/shop"
-            className="flex items-center gap-3 rounded-3xl border border-accent/20 bg-accent-light/50 p-4 transition-transform active:scale-[0.98]"
-          >
-            <span className="text-3xl" aria-hidden>
-              🛒
+      {/* コミュニティ導線（SNS）: みんなの料理を見る */}
+      <section className="mt-6">
+        <Link
+          href="/feed"
+          className="flex items-center gap-3 rounded-3xl border border-accent/20 bg-accent-light/50 p-4 transition-transform active:scale-[0.98]"
+        >
+          <span className="text-3xl" aria-hidden>
+            👥
+          </span>
+          <span className="min-w-0 flex-1">
+            <span className="block text-sm font-black text-ink">
+              みんなの料理を見る
             </span>
-            <span className="min-w-0 flex-1">
-              <span className="block text-sm font-black text-ink">
-                在庫が少なくなっています
-              </span>
-              <span className="block text-xs text-ink-soft">
-                足りない食材を390円から補充できます
-              </span>
+            <span className="block text-xs text-ink-soft">
+              友だちの投稿で、自炊が続く
             </span>
-            <span className="shrink-0 text-sm font-black text-accent">補充 →</span>
-          </Link>
-        </section>
-      )}
+          </span>
+          <span className="shrink-0 text-sm font-black text-accent">フィード →</span>
+        </Link>
+      </section>
 
       {/* クイックアクション */}
       <section className="mt-6">
@@ -202,9 +213,9 @@ export default function HomePage() {
             className="flex flex-col items-center justify-center gap-1.5 rounded-3xl bg-accent px-4 py-6 text-white shadow-card transition-transform active:scale-95"
           >
             <span className="text-3xl" aria-hidden>
-              🍳
+              📷
             </span>
-            <span className="text-sm font-black">料理を記録</span>
+            <span className="text-sm font-black">料理を投稿</span>
           </Link>
           <Link
             href="/receipt"
