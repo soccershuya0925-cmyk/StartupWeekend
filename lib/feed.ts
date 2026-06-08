@@ -80,7 +80,7 @@ const SAMPLE_COMMUNITY: FeedPost[] = [
     userName: "だいき",
     avatar: "🧑‍🎓",
     kind: "plan",
-    text: "明日は¥390の野菜カレーを食べる予定。計画的にいくぞ",
+    text: "明日は作り置きの野菜カレーを食べる予定。計画的にいくぞ",
     createdAt: minutesAgo(300),
     likes: 5,
   },

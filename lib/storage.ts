@@ -118,7 +118,7 @@ export function addRedemption(r: Redemption): Redemption[] {
   return next;
 }
 
-// ---- 注文履歴（Order[]・補充） ----
+// ---- 食べる予定の履歴（Order[]） ----
 export function getOrders(): Order[] {
   return read<Order[]>(KEYS.orders, []);
 }

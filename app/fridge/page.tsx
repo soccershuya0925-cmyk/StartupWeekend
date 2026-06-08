@@ -252,8 +252,8 @@ export default function FridgePage() {
           <p className="mt-1 text-xs text-ink-soft/70">
             「＋追加」かレシート読取で食材を入れよう
           </p>
-          <Link href="/shop" className="btn-ghost mt-4 inline-flex">
-            🛒 390円で補充する
+          <Link href="/receipt" className="btn-ghost mt-4 inline-flex">
+            📷 レシートで追加する
           </Link>
         </div>
       ) : (
